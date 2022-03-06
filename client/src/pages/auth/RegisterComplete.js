@@ -3,13 +3,13 @@ import { auth } from '../../firebase'
 import { toast } from 'react-toastify'
 
 const RegisterComplete = ({ history }) => {
-    const [email, setEmail] = useState('')
+    let [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
     const getEmail = window.localStorage.getItem("EmailForRegistration", email)
     useEffect(() => {
         setEmail(getEmail)
-    }, [])
+    }, [getEmail])
 
     const handleRegisterCompleteSubmite = async (e) => {
         e.preventDefault();
