@@ -1,0 +1,67 @@
+import React, { useEffect, useState } from 'react'
+import { auth } from '../../firebase'
+import { toast } from 'react-toastify'
+
+const RegisterComplete = ({ history }) => {
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+
+    const getEmail = window.localStorage.getItem("EmailForRegistration", email)
+    useEffect(() => {
+        setEmail(getEmail)
+    }, [])
+
+    const handleRegisterCompleteSubmite = async (e) => {
+        e.preventDefault();
+
+        if (!password || password.trim() === 0) {
+            toast.error("Please Enter the Password")
+            return
+        }
+        if (password < 6) {
+            toast.error("Password Should Be more than 6 charcters")
+            return
+        }
+        // Confirm the link is a sign-in with email link.
+        if (auth.isSignInWithEmailLink(window.location.href)) {
+            if (!email) {
+                email = window.prompt('Please provide your email for confirmation');
+            }
+
+            try {
+                const result = await auth.signInWithEmailLink(email, window.location.href);
+                console.log(result);
+                toast.success("Registration complete Successful")
+                history.push('/')
+            } catch (err) {
+                console.log(err);
+                toast.error(err.message)
+            }
+
+        }
+
+    }
+
+    const handleRegisterComplete = (e) => <form onSubmit={handleRegisterCompleteSubmite}>
+        <input type="email" value={email} className="form-control" disabled />
+        <div>
+            <input type="password" className="form-control mt-2" value={password} onChange={(e) => setPassword(e.target.value)} />
+        </div>
+        <button type='submite' className='btn btn-raised mt-2'> Register</button>
+    </form>
+
+    return (
+        <>
+            <div className="container p-5">
+                <div className="row">
+                    <div className='col-md-6 offset-md-3'>
+                        <h4>Complete Your Reagistration</h4>
+                        {handleRegisterComplete()}
+                    </div>
+                </div>
+            </div>
+        </>
+    )
+}
+
+export default RegisterComplete
