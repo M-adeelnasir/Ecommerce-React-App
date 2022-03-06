@@ -31,8 +31,22 @@ const RegisterComplete = ({ history }) => {
             try {
                 const result = await auth.signInWithEmailLink(email, window.location.href);
                 console.log(result);
-                toast.success("Registration complete Successful")
-                history.push('/')
+                if (result.user.emailVerified) {
+
+                    //remove the email from local storage
+                    window.localStorage.removeItem('EmailForRegistration')
+                    toast.success("Registration complete Successful")
+
+                    //important
+                    // let make it password with auth (before it was a passwordless auth)
+                    let user = auth.currentUser;
+                    await user.updatePassword(password);
+
+                    const idTokenResult = await user.getIdTokenResult()
+                    // console.log(user, idTokenResult);
+                    history.push('/login')
+                }
+
             } catch (err) {
                 console.log(err);
                 toast.error(err.message)
