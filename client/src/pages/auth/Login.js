@@ -5,11 +5,22 @@ import { auth } from '../../firebase'
 import { Button } from 'antd';
 import { useSelector, useDispatch } from 'react-redux'
 import { toast } from 'react-toastify';
+import axios from 'axios'
+
+
+//LETS MAKE HTTP POST REQUEST TO OUR BACKEND SETTING HEADERS
+const createOrUpdate = async (authToken) => {
+    return await axios.post(`${process.env.REACT_APP_API_REQUEST}/create-or-update-user`, {}, {
+        headers: {
+            authToken
+        }
+    })
+}
 
 
 const Login = ({ history }) => {
     const [email, setEmail] = useState('adnasirkbw@gmail.com');
-    const [password, setPassword] = useState('123456')
+    const [password, setPassword] = useState('1234567890')
     const [loading, setLoading] = useState(false)
 
     const { user } = useSelector((state) => ({ ...state }))
@@ -28,8 +39,18 @@ const Login = ({ history }) => {
 
         try {
             const result = await auth.signInWithEmailAndPassword(email, password);
-            console.log(result);
+            // console.log(result);
             const idTokenResult = await result.user.getIdTokenResult()
+
+            //request to backend
+            createOrUpdate(idTokenResult.token)
+                .then((res) => {
+                    console.log(res);
+                }).catch((err) => {
+                    console.log(err);
+                })
+
+
             toast.success('Login Successfuly')
             dispatch({
                 type: "LOGGED_IN_USER",
