@@ -5,17 +5,8 @@ import { auth } from '../../firebase'
 import { Button } from 'antd';
 import { useSelector, useDispatch } from 'react-redux'
 import { toast } from 'react-toastify';
-import axios from 'axios'
+import { createOrUpdate } from '../../functions/auth';
 
-
-//LETS MAKE HTTP POST REQUEST TO OUR BACKEND SETTING HEADERS
-const createOrUpdate = async (authToken) => {
-    return await axios.post(`${process.env.REACT_APP_API_REQUEST}/create-or-update-user`, {}, {
-        headers: {
-            authToken
-        }
-    })
-}
 
 
 const Login = ({ history }) => {
@@ -45,20 +36,22 @@ const Login = ({ history }) => {
             //request to backend
             createOrUpdate(idTokenResult.token)
                 .then((res) => {
-                    console.log(res);
-                }).catch((err) => {
-                    console.log(err);
-                })
+                    toast.success('Login Successfuly')
+                    // console.log(res.data.data.email)
+                    dispatch({
+                        type: "LOGGED_IN_USER",
+                        payload: ({
+                            email: res.data.data.email,
+                            role: res.data.data.role,
+                            _id: res.data.data._id,
+                            name: res.data.data.name,
+                            token: idTokenResult.token
+                        })
 
-
-            toast.success('Login Successfuly')
-            dispatch({
-                type: "LOGGED_IN_USER",
-                payload: ({
-                    email: result.user.email,
-                    token: idTokenResult.token
+                    }).catch((err) => {
+                        console.log(err);
+                    })
                 })
-            })
             setLoading(false)
             history.push('/')
         } catch (err) {
@@ -77,14 +70,25 @@ const Login = ({ history }) => {
             .then(async (result) => {
                 toast.success("Login Successfuly")
                 const idTokenResult = await result.user.getIdTokenResult();
-                dispatch({
-                    type: "LOGGED_IN_USER",
-                    payload: ({
-                        name: result.user.displayName,
-                        email: result.user.email,
-                        token: idTokenResult.token
+                //request to backend
+                createOrUpdate(idTokenResult.token)
+                    .then((res) => {
+                        // console.log(res);
+                        dispatch({
+                            type: "LOGGED_IN_USER",
+                            payload: ({
+                                email: res.data.data.email,
+                                role: res.data.data.role,
+                                _id: res.data.data._id,
+                                name: res.data.data.name,
+                                token: idTokenResult.token
+                            })
+
+                        })
+                    }).catch((err) => {
+                        console.log(err);
                     })
-                })
+
 
                 history.push('/')
             }).catch((error) => {
