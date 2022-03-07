@@ -1,9 +1,17 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { toast } from 'react-toastify';
 import { auth } from '../../firebase';
-const Register = () => {
+import { useSelector } from 'react-redux';
+const Register = ({ history }) => {
     const [email, setEmail] = useState("adnasirkbw@gmail.com")
 
+    const { user } = useSelector((state) => ({ ...state }))
+    useEffect(() => {
+        // console.log(user);
+        if (user && user.token) {
+            history.push('/')
+        }
+    }, [user])
     const handleRegisterSubmite = (e) => {
         e.preventDefault()
         const config = {
