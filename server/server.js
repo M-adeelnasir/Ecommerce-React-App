@@ -16,7 +16,7 @@ if (process.env.NODE_ENV = "development") {
     app.use(morgan('dev')); //
 }
 app.use(cors()) //will able to run server and client on diffrenet doamin or ports
-
+app.use(express.json())
 routes.map((r) => app.use('/api/v1', require('./routes/' + r)))
 
 
