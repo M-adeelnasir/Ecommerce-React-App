@@ -23,3 +23,10 @@ exports.updateOrCreateUser = async (req, res) => {
     }
 
 }
+
+exports.currentUser = async (req, res) => {
+    await User.findOne({ emial: req.user.email }).exec((err, user) => {
+        if (err) throw new Error(err)
+        res.json(user)
+    })
+}

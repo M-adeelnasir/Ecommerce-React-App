@@ -8,3 +8,12 @@ export const createOrUpdate = async (authToken) => {
         }
     })
 }
+
+//request the current user
+export const currenUser = async (authToken) => {
+    return await axios.post(`${process.env.REACT_APP_API_REQUEST}/current-user`, {}, {
+        headers: {
+            authToken
+        }
+    })
+}

@@ -17,6 +17,13 @@ const Login = ({ history }) => {
     const { user } = useSelector((state) => ({ ...state }))
     const dispatch = useDispatch();
 
+    const roleBaseRedirect = (res) => {
+        if (res.data.data.role === "admin") {
+            history.push('/admin/dashboard')
+        } else {
+            history.push('/user/history')
+        }
+    }
     //if the user is already looged in to protect the rout
     useEffect(() => {
         // console.log(user);
@@ -38,6 +45,7 @@ const Login = ({ history }) => {
                 .then((res) => {
                     toast.success('Login Successfuly')
                     // console.log(res.data.data.email)
+                    roleBaseRedirect(res)
                     dispatch({
                         type: "LOGGED_IN_USER",
                         payload: ({
@@ -48,12 +56,12 @@ const Login = ({ history }) => {
                             token: idTokenResult.token
                         })
 
-                    }).catch((err) => {
-                        console.log(err);
                     })
+                }).catch((err) => {
+                    console.log(err);
                 })
             setLoading(false)
-            history.push('/')
+            // history.push('/')
         } catch (err) {
             setLoading(false)
             console.log(err);
