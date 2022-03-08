@@ -9,9 +9,9 @@ const LoadingRedirect = () => {
             setCount((currentCount) => --currentCount)
         }, 1000)
         //redirect user
-        count == 0 && history.push('/login')
+        count === 0 && history.push('/login')
         return () => clearInterval(intervel)
-    }, [count])
+    }, [count, history])
     return (
         <>
             <div className="container p-5 text-center">

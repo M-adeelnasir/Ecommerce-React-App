@@ -30,7 +30,7 @@ const Login = ({ history }) => {
         if (user && user.token) {
             history.push('/')
         }
-    }, [user])
+    }, [user, history])
     const handleLoginSubmite = async (e) => {
         e.preventDefault()
         setLoading(true)
@@ -81,6 +81,7 @@ const Login = ({ history }) => {
                 //request to backend
                 createOrUpdate(idTokenResult.token)
                     .then((res) => {
+                        roleBaseRedirect(res)
                         // console.log(res);
                         dispatch({
                             type: "LOGGED_IN_USER",
@@ -97,8 +98,6 @@ const Login = ({ history }) => {
                         console.log(err);
                     })
 
-
-                history.push('/')
             }).catch((error) => {
                 console.log(error);
                 toast.error(error.message)

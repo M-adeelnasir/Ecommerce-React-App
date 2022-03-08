@@ -1,6 +1,6 @@
 import React from 'react'
 import UserNav from '../../components/nav/UserNav'
-const UserHistory = () => {
+const Wishlist = () => {
     return (
         <>
             <div className="continer-fluid">
@@ -8,11 +8,11 @@ const UserHistory = () => {
                     <div className="col-md-2">
                         <UserNav />
                     </div>
-                    <div>User history</div>
+                    <div>User Wishlist</div>
                 </div>
             </div>
         </>
     )
 }
 
-export default UserHistory
+export default Wishlist
