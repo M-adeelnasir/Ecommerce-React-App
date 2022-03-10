@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux'
 import AdminNav from '../../../components/nav/AdminNav'
 import { createCategory, getCategories, deleteCategory } from '../../../functions/category'
 import CategoryForm from '../../../components/form/CategoryForm'
-
+import CategorySearch from '../../../components/form/CategorySearch'
 
 
 const CategoryCreate = () => {
@@ -65,12 +65,7 @@ const CategoryCreate = () => {
 
     }
 
-    //handle search
-    //step(1)
-    const handleSearch = (e) => {
-        e.preventDefault();
-        setKeyword(e.target.value.toLowerCase())
-    }
+
 
     // step2
     //seach category name base on each letter in search keyword we are entering
@@ -88,7 +83,9 @@ const CategoryCreate = () => {
 
                     <CategoryForm handleCreateSubmite={handleCreateSubmite} name={name} setName={setName} />
                     <hr />
-                    <input type="text" value={keyword} onChange={handleSearch} className="form-control border-top-0 border-left-0 border-right-0  shadow-none rounded-0 " placeholder='Search Category' />
+
+                    {/* Search input */}
+                    <CategorySearch keyword={keyword} setKeyword={setKeyword} />
                     <br />
                     {categories.length}
                     {/* {JSON.stringify(categories)} */}
@@ -100,7 +97,6 @@ const CategoryCreate = () => {
                                 <i className="fa fa-trash align-center text-center text-danger">
                                 </i>
                             </span>
-
                             <Link to={`/admin/category/${cat.slug}`}>
                                 <span className=' btn btn-sm float-right mx-auto m-0'>
                                     <i className="fa fa-pencil"></i>
