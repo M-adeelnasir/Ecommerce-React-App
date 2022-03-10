@@ -1,6 +1,7 @@
 const Category = require('../models/categoriesSchema')
 const slugify = require('slugify')
 //@create Category
+
 exports.create = async (req, res) => {
 
     try {
