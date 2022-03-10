@@ -3,14 +3,16 @@ import { toast } from 'react-toastify'
 import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import AdminNav from '../../../components/nav/AdminNav'
-import { createCategory, getCategories, getSingleCategory, deleteCategory } from '../../../functions/category'
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
+import { createCategory, getCategories, deleteCategory } from '../../../functions/category'
+import CategoryForm from '../../../components/form/CategoryForm'
+
 
 
 const CategoryCreate = () => {
     const [name, setName] = useState('')
     const [loading, setLoading] = useState(false)
     const [categories, setCategories] = useState([])
+    const [keyword, setKeyword] = useState("")
 
     const { user } = useSelector((state) => ({ ...state }))
 
@@ -62,15 +64,18 @@ const CategoryCreate = () => {
         }
 
     }
-    const createCategoryForm = () => <form onSubmit={handleCreateSubmite}>
 
-        <div className="form-group">
-            <label>Name</label>
-            <input type="text" value={name} onChange={(e) => setName(e.target.value)} className="form-control border-top-0 border-left-0 border-right-0 shadow-none rounded-0" autoFocus required />
-            <button type='submite' className='btn btn-outline-primary mt-2'>Save</button>
-        </div>
+    //handle search
+    //step(1)
+    const handleSearch = (e) => {
+        e.preventDefault();
+        setKeyword(e.target.value.toLowerCase())
+    }
 
-    </form>
+    // step2
+    //seach category name base on each letter in search keyword we are entering
+    const search = (keyword) => (letter) => letter.name.toLowerCase().includes(keyword)
+
 
     return (
         <div className="continer-fluid">
@@ -80,11 +85,16 @@ const CategoryCreate = () => {
                 </div>
                 <div className="col-md-9 mt-2">
                     {loading ? <h4 className='text-danger'>Laoding...</h4> : <h4>Create Category</h4>}
-                    {createCategoryForm()}
+
+                    <CategoryForm handleCreateSubmite={handleCreateSubmite} name={name} setName={setName} />
                     <hr />
+                    <input type="text" value={keyword} onChange={handleSearch} className="form-control border-top-0 border-left-0 border-right-0  shadow-none rounded-0 " placeholder='Search Category' />
+                    <br />
                     {categories.length}
                     {/* {JSON.stringify(categories)} */}
-                    {categories.map((cat) => (
+
+                    {/* step 3 final */}
+                    {categories.filter(search(keyword)).map((cat) => (
                         <div className='alert alert-secondary' key={cat._id}> {cat.name}
                             <span onClick={() => deleteThisCategory(cat.slug, cat.name)} className=' btn btn-sm float-right mx-auto m-0'>
                                 <i className="fa fa-trash align-center text-center text-danger">

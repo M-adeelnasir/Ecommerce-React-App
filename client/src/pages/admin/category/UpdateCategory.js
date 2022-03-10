@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux'
 import AdminNav from '../../../components/nav/AdminNav'
 import { updateSingleCategory, getSingleCategory } from '../../../functions/category'
 import { useParams, useHistory } from 'react-router-dom'
+import CategoryForm from '../../../components/form/CategoryForm'
 
 
 
@@ -47,15 +48,7 @@ const UpdateCategory = () => {
     }
 
 
-    const createCategoryForm = () => <form onSubmit={handleCreateSubmite}>
 
-        <div className="form-group">
-            <label>Name</label>
-            <input type="text" value={name} onChange={(e) => setName(e.target.value)} className="form-control border-top-0 border-left-0 border-right-0 shadow-none rounded-0" autoFocus required />
-            <button type='submite' className='btn btn-outline-primary mt-2'>Update</button>
-        </div>
-
-    </form>
 
     return (
         <div className="continer-fluid">
@@ -65,7 +58,7 @@ const UpdateCategory = () => {
                 </div>
                 <div className="col-md-9 mt-2">
                     {loading ? <h4 className='text-danger'>Laoding...</h4> : <h4>Update Category</h4>}
-                    {createCategoryForm()}
+                    <CategoryForm handleCreateSubmite={handleCreateSubmite} name={name} setName={setName} />
 
                 </div>
             </div>
