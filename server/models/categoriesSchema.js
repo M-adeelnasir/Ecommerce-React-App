@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const slugify = require('slugify')
+const { ObjectId } = mongoose.Schema
 // const { default: slugify } = require("slugify");
 
 const categorySchema = new mongoose.Schema({
