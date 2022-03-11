@@ -3,16 +3,18 @@ import { toast } from 'react-toastify'
 import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import AdminNav from '../../../components/nav/AdminNav'
-import { createCategory, getCategories, deleteCategory } from '../../../functions/category'
+import { getCategories } from '../../../functions/category'
+import { getSubs, createSub, deleteSub } from '../../../functions/sub'
 import CategoryForm from '../../../components/form/CategoryForm'
 import CategorySearch from '../../../components/form/CategorySearch'
 
 
-const CategoryCreate = () => {
+const SubCreate = () => {
     const [name, setName] = useState('')
     const [loading, setLoading] = useState(false)
     const [categories, setCategories] = useState([])
     const [keyword, setKeyword] = useState("")
+    const [category, setCategory] = useState('')
 
     const { user } = useSelector((state) => ({ ...state }))
 
@@ -30,13 +32,12 @@ const CategoryCreate = () => {
     const handleCreateSubmite = async (e) => {
         e.preventDefault();
         setLoading(true);
-        createCategory({ name }, user.token)
+        createSub({ name, parent: category }, user.token)
             .then((res) => {
                 // console.log(res);
                 setLoading(false)
                 setName('')
                 toast.success(`${res.data.data.name} is just created`)
-                loadCategories()
             }).catch(err => {
                 setLoading(false)
                 console.log(err);
@@ -48,7 +49,7 @@ const CategoryCreate = () => {
     const deleteThisCategory = async (slug, name) => {
         if (window.confirm("Delete?")) {
             setLoading(true);
-            deleteCategory(slug, user.token)
+            deleteSub(slug, user.token)
                 .then((res) => {
                     setLoading(false)
                     toast.success(`"${name}" category Deleted`)
@@ -79,10 +80,23 @@ const CategoryCreate = () => {
                     <AdminNav />
                 </div>
                 <div className="col-md-9 mt-2">
-                    {loading ? <h4 className='text-danger'>Laoding...</h4> : <h4>Create Category</h4>}
+                    {loading ? <h4 className='text-danger'>Laoding...</h4> : <h4>Create Sub Category</h4>}
 
+                    <div className="form-group">
+                        <label>Parent category</label>
+                        <select name="category" className='form-control' onChange={e => setCategory(e.target.value)}>
+                            <option>Select any category</option>
+                            {categories.length > 0 && categories.map((cat) => (<option key={cat._id} value={cat._id}>{cat.name}</option>))}
+                        </select>
+
+                    </div>
+                    {/* {JSON.stringify(category)} */}
+
+                    {/* Form */}
                     <CategoryForm handleCreateSubmite={handleCreateSubmite} name={name} setName={setName} />
                     <hr />
+
+
 
                     {/* Search input */}
                     <CategorySearch keyword={keyword} setKeyword={setKeyword} />
@@ -91,7 +105,8 @@ const CategoryCreate = () => {
                     {/* {JSON.stringify(categories)} */}
 
                     {/* step 3 final */}
-                    {categories.filter(search(keyword)).map((cat) => (
+
+                    {/* {categories.filter(search(keyword)).map((cat) => (
                         <div className='alert alert-secondary' key={cat._id}> {cat.name}
                             <span onClick={() => deleteThisCategory(cat.slug, cat.name)} className=' btn btn-sm float-right mx-auto m-0'>
                                 <i className="fa fa-trash align-center text-center text-danger">
@@ -104,11 +119,12 @@ const CategoryCreate = () => {
                             </Link>
                         </div>
 
-                    ))}
+                    ))} */}
+
                 </div>
             </div>
         </div>
     )
 }
 
-export default CategoryCreate
+export default SubCreate
