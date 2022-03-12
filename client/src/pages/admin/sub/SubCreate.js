@@ -15,6 +15,7 @@ const SubCreate = () => {
     const [categories, setCategories] = useState([])
     const [keyword, setKeyword] = useState("")
     const [category, setCategory] = useState('')
+    const [subs, setSubs] = useState([])
 
     const { user } = useSelector((state) => ({ ...state }))
 
@@ -25,8 +26,18 @@ const SubCreate = () => {
                 // console.log(category.data.data);
             })
     }
+
+    const loadsSub = () => {
+        getSubs()
+            .then((sub) => {
+                setSubs(sub.data.data)
+                console.log(sub.data.data);
+            })
+    }
+
     useEffect(() => {
         loadCategories();
+        loadsSub()
     }, [])
 
     const handleCreateSubmite = async (e) => {
@@ -38,6 +49,7 @@ const SubCreate = () => {
                 setLoading(false)
                 setName('')
                 toast.success(`${res.data.data.name} is just created`)
+                loadsSub()
             }).catch(err => {
                 setLoading(false)
                 console.log(err);
@@ -46,6 +58,7 @@ const SubCreate = () => {
 
     }
 
+
     const deleteThisCategory = async (slug, name) => {
         if (window.confirm("Delete?")) {
             setLoading(true);
@@ -53,7 +66,7 @@ const SubCreate = () => {
                 .then((res) => {
                     setLoading(false)
                     toast.success(`"${name}" category Deleted`)
-                    loadCategories()
+                    loadsSub()
                 }).catch(err => {
                     setLoading(false)
                     console.log(err);
@@ -65,9 +78,6 @@ const SubCreate = () => {
         }
 
     }
-
-
-
     // step2
     //seach category name base on each letter in search keyword we are entering
     const search = (keyword) => (letter) => letter.name.toLowerCase().includes(keyword)
@@ -85,7 +95,7 @@ const SubCreate = () => {
                     <div className="form-group">
                         <label>Parent category</label>
                         <select name="category" className='form-control' onChange={e => setCategory(e.target.value)}>
-                            <option>Select any category</option>
+                            <option disabled>Select any category</option>
                             {categories.length > 0 && categories.map((cat) => (<option key={cat._id} value={cat._id}>{cat.name}</option>))}
                         </select>
 
@@ -106,20 +116,20 @@ const SubCreate = () => {
 
                     {/* step 3 final */}
 
-                    {/* {categories.filter(search(keyword)).map((cat) => (
-                        <div className='alert alert-secondary' key={cat._id}> {cat.name}
-                            <span onClick={() => deleteThisCategory(cat.slug, cat.name)} className=' btn btn-sm float-right mx-auto m-0'>
+                    {subs.filter(search(keyword)).map((sub) => (
+                        <div className='alert alert-secondary' key={sub._id}> {sub.name}
+                            <span onClick={() => deleteThisCategory(sub.slug)} className=' btn btn-sm float-right mx-auto m-0'>
                                 <i className="fa fa-trash align-center text-center text-danger">
                                 </i>
                             </span>
-                            <Link to={`/admin/category/${cat.slug}`}>
+                            <Link to={`/admin/sub/${sub.slug}`}>
                                 <span className=' btn btn-sm float-right mx-auto m-0'>
                                     <i className="fa fa-pencil"></i>
                                 </span>
                             </Link>
                         </div>
 
-                    ))} */}
+                    ))}
 
                 </div>
             </div>

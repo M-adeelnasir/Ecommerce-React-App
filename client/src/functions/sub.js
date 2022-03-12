@@ -42,7 +42,7 @@ export const getSingleSub = async (slug) => {
 
 // delete sub
 export const deleteSub = async (slug, authToken) => {
-    return await axios(`${process.env.REACT_APP_API_REQUEST}`, {
+    return await axios.delete(`${process.env.REACT_APP_API_REQUEST}/sub/${slug}`, {
         headers: {
             authToken
         }

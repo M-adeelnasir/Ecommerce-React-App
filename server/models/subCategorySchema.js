@@ -19,7 +19,7 @@ const subSchema = new mongoose.Schema({
         ref: "Category",
         required: true
     }
-})
+}, { timestamps: true })
 
 subSchema.pre('save', function (next) {
     this.slug = slugify(this.name, { lower: true })

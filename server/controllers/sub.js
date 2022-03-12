@@ -55,8 +55,8 @@ exports.read = async (req, res) => {
 //update Sub cayegory
 exports.update = async (req, res) => {
     try {
-        const { name } = req.body
-        const sub = await Sub.findOneAndUpdate({ slug: req.params.slug }, { name, slug: slugify(name) }, { new: true, runValidators: true });
+        const { name, parent } = req.body
+        const sub = await Sub.findOneAndUpdate({ slug: req.params.slug }, { name, parent, slug: slugify(name) }, { new: true, runValidators: true });
         res.status(200).json({
             success: true,
             data: sub
@@ -92,7 +92,7 @@ exports.remove = async (req, res) => {
 //list of all sub
 exports.list = async (req, res) => {
     try {
-        const subs = await Sub.find({}).sort({ createAt: -1 })
+        const subs = await Sub.find({}).sort({ createdAt: -1 })
         res.status(200).json({
             success: true,
             data: subs
