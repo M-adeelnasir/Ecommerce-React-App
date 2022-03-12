@@ -20,6 +20,7 @@ import CategoryCreate from './pages/admin/category/CategoryCreate';
 import UpdateCategory from './pages/admin/category/UpdateCategory';
 import SubCreate from './pages/admin/sub/SubCreate'
 import UpdateSub from './pages/admin/sub/UpdateSub';
+import CreateProduct from './pages/admin/product/CreateProduct';
 const App = () => {
 
   const dispatch = useDispatch();
@@ -75,6 +76,8 @@ const App = () => {
         <AdminRoute exact path='/admin/category/:slug'><UpdateCategory /></AdminRoute>
         <AdminRoute exact path='/admin/sub'><SubCreate /></AdminRoute>
         <AdminRoute exact path='/admin/sub/:slug'><UpdateSub /></AdminRoute>
+        <AdminRoute exact path='/admin/product'><CreateProduct /></AdminRoute>
+
       </Switch>
     </>
   )

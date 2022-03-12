@@ -71,7 +71,7 @@ const UpdateSub = () => {
 
                     <div className="form-group">
                         <label>Parent category</label>
-                        <select name="sub" className='form-control' defaultValue={'DEFAULT'} onChange={e => setParent(e.target.value)}>
+                        <select name="sub" className='form-control' onChange={e => setParent(e.target.value)}>
                             {categories.length > 0 && categories.map((cat) => (<option key={cat._id} value={cat._id} selected={cat._id === parent}>{cat.name}</option>))}
                         </select>
 

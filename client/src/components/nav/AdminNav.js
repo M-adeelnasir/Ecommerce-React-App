@@ -12,7 +12,7 @@ const AdminNav = () => {
                     <Link to='/admin/produts' className='nav-link'>Products</Link>
                 </li>
                 <li className="nav-item">
-                    <Link to='/admin/proddut' className='nav-link'>Product</Link>
+                    <Link to='/admin/product' className='nav-link'>Product</Link>
                 </li>
 
                 <li className="nav-item">
