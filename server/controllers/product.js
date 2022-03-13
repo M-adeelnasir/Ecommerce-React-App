@@ -28,3 +28,20 @@ exports.create = async (req, res) => {
         })
     }
 }
+
+//get all products(list)
+
+exports.getProduct = async (req, res) => {
+    try {
+        const products = await Product.find({})
+        res.status(200).json({
+            success: false,
+            data: products
+        })
+    } catch (err) {
+        res.status(400).json({
+            success: false,
+            data: {}
+        })
+    }
+}

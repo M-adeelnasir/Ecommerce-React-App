@@ -1,5 +1,4 @@
-import create from '@ant-design/icons/lib/components/IconFont'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import AdminNav from '../../../components/nav/AdminNav'
 import { useSelector } from 'react-redux'
 import createProduct from '../../../functions/product'
@@ -40,7 +39,7 @@ const CreateProduct = () => {
         e.preventDefault();
         createProduct(values, user.token)
             .then((res) => {
-                // console.log(res);
+                console.log(res);
                 //Show alert to admin product is created
                 window.alert(`"${res.data.data.title}" is created`)
                 window.location.reload()
@@ -48,7 +47,8 @@ const CreateProduct = () => {
 
             }).catch((err) => {
                 console.log(err);
-                if (err.response.status === 400) toast.error(err.response.data)
+                //error Getting from backend
+                toast.error(err.response.data.data)
             })
 
     }
