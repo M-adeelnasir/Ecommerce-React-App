@@ -3,7 +3,9 @@ import AdminNav from '../../../components/nav/AdminNav'
 import { useSelector } from 'react-redux'
 import createProduct from '../../../functions/product'
 import { toast } from 'react-toastify'
-import { getCategories } from '../../../functions/category'
+import { getCategories, getSubCat } from '../../../functions/category'
+import { Select } from 'antd';
+const { Option } = Select;
 
 const CreateProduct = () => {
 
@@ -27,6 +29,10 @@ const CreateProduct = () => {
     //lets destructure
     const { title, description, price, category, categories, subs, shipping, quantity, images, colors, brands, brand, color } = values
 
+    const [subOptions, setSubOptions] = useState([])
+    const [show, setShow] = useState(false)
+
+
     const { user } = useSelector((state) => ({ ...state }));
     //handleChange  
     const handleChange = (e) => {
@@ -43,7 +49,7 @@ const CreateProduct = () => {
                 console.log(res);
                 //Show alert to admin product is created
                 window.alert(`"${res.data.data.title}" is created`)
-                window.location.reload()
+                // window.location.reload()
 
 
             }).catch((err) => {
@@ -59,7 +65,24 @@ const CreateProduct = () => {
                 console.log(res.data.data);
                 setValues({ ...values, categories: res.data.data })
             })
+
+
     }
+
+    const handleCategoryChange = async (e) => {
+        e.preventDefault();
+        setValues({ ...values, subs: [], category: e.target.value })
+        getSubCat(e.target.value)
+            .then(res => {
+                // console.log(res.data.data);
+                setSubOptions(res.data.data)
+            })
+        setShow(true)
+
+    }
+
+
+
     useEffect(() => {
         loadCategories()
     }, [])
@@ -116,12 +139,27 @@ const CreateProduct = () => {
                             </div>
                             <div className="form-group">
                                 <label>category</label>
-                                <select name="category" className='form-control' onChange={handleChange}>
+                                <select name="category" className='form-control' onChange={handleCategoryChange}>
                                     <option disabled>Select any category</option>
                                     {categories.length > 0 && categories.map((cat) => (<option key={cat._id} value={cat._id}>{cat.name}</option>))}
                                 </select>
-
                             </div>
+
+                            {/* {show ? subOptions.length : "number"} */}
+
+                            {show && <div>
+                                <Select
+                                    mode="multiple"
+                                    allowClear
+                                    style={{ width: '100%' }}
+                                    placeholder="Please select"
+                                    onChange={(value) => setValues({ ...values, subs: value })}
+                                    value={subs}
+                                >
+                                    {subOptions.map((sub) => <Option key={sub._id} value={sub._id}>{sub.name}</Option>)}
+                                </Select>
+                            </div>}
+
                             <button className="btn btn-outline-info ">Save</button>
                         </form>
 

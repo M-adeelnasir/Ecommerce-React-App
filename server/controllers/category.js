@@ -118,13 +118,13 @@ exports.list = async (req, res) => {
 exports.getSub = async (req, res) => {
     try {
         const sub = await Sub.find({ parent: req.params._id })
-        console.log(category);
+        console.log(sub);
         res.status(200).json({
             success: true,
             data: sub
         })
     } catch (err) {
-        console.log(category);
+        console.log(sub);
         res.status(404).json({
             success: false,
             data: {}

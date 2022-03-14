@@ -11,7 +11,7 @@ router.get('/categories', list)
 router.get('/category/:slug', read)
 router.put('/category/:slug', checkAuth, checkAdmin, update)
 router.delete('/category/:slug', checkAuth, checkAdmin, remove)
-router.get('/category/sub/:_id', getSub);
+router.get('/category/subs/:_id', getSub);
 
 
 
