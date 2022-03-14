@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import AdminNav from '../../../components/nav/AdminNav'
 import { useSelector } from 'react-redux'
 import createProduct from '../../../functions/product'
 import { toast } from 'react-toastify'
+import { getCategories } from '../../../functions/category'
 
 const CreateProduct = () => {
 
@@ -52,6 +53,16 @@ const CreateProduct = () => {
             })
 
     }
+    const loadCategories = () => {
+        getCategories()
+            .then(res => {
+                console.log(res.data.data);
+                setValues({ ...values, categories: res.data.data })
+            })
+    }
+    useEffect(() => {
+        loadCategories()
+    }, [])
     return (
         <>
 
@@ -102,6 +113,14 @@ const CreateProduct = () => {
                                     <option >Please Select</option>
                                     {brands.map((b) => <option key={b} value={b}>{b}</option>)}
                                 </select>
+                            </div>
+                            <div className="form-group">
+                                <label>category</label>
+                                <select name="category" className='form-control' onChange={handleChange}>
+                                    <option disabled>Select any category</option>
+                                    {categories.length > 0 && categories.map((cat) => (<option key={cat._id} value={cat._id}>{cat.name}</option>))}
+                                </select>
+
                             </div>
                             <button className="btn btn-outline-info ">Save</button>
                         </form>

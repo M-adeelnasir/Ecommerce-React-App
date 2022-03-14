@@ -29,14 +29,14 @@ const productSchema = new mongoose.Schema({
         trim: true,
         maxlength: 32
     },
-    // category: {
-    //     type: ObjectId,
-    //     ref: "Category"
-    // },
-    // subs: [{
-    //     type: ObjectId,
-    //     ref: "Sub"
-    // }],
+    category: {
+        type: ObjectId,
+        ref: "Category"
+    },
+    subs: [{
+        type: ObjectId,
+        ref: "Sub"
+    }],
     quantity: Number,
     sold: {
         type: Number,

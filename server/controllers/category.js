@@ -1,5 +1,6 @@
 const Category = require('../models/categoriesSchema')
 const slugify = require('slugify')
+const Sub = require('../models/subCategorySchema')
 //@create Category
 
 exports.create = async (req, res) => {
@@ -107,6 +108,24 @@ exports.list = async (req, res) => {
     } catch (err) {
         console.log(err);
         res.status(401).json({
+            success: false,
+            data: {}
+        })
+    }
+}
+
+
+exports.getSub = async (req, res) => {
+    try {
+        const sub = await Sub.find({ parent: req.params._id })
+        console.log(category);
+        res.status(200).json({
+            success: true,
+            data: sub
+        })
+    } catch (err) {
+        console.log(category);
+        res.status(404).json({
             success: false,
             data: {}
         })
