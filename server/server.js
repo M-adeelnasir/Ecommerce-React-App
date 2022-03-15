@@ -5,6 +5,7 @@ const morgan = require('morgan')
 const fs = require('fs')
 const routes = fs.readdirSync('./routes')
 const connectDB = require('./dotenvVariables/db')
+const bodyParser = require('body-parser')
 
 dotenv.config({ path: "./dotenvVariables/config.env" })
 
@@ -16,7 +17,9 @@ if (process.env.NODE_ENV = "development") {
     app.use(morgan('dev')); //
 }
 app.use(cors()) //will able to run server and client on diffrenet doamin or ports
-app.use(express.json())
+// app.use(express.json())
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 routes.map((r) => app.use('/api/v1', require('./routes/' + r)))
 
 

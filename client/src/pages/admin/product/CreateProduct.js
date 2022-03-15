@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react'
+import Resizer from "react-image-file-resizer";
+import axios from 'axios';
 import AdminNav from '../../../components/nav/AdminNav'
 import { useSelector } from 'react-redux'
 import createProduct from '../../../functions/product'
@@ -6,6 +8,7 @@ import { toast } from 'react-toastify'
 import { getCategories, getSubCat } from '../../../functions/category'
 import { Select } from 'antd';
 const { Option } = Select;
+
 
 const CreateProduct = () => {
 
@@ -31,6 +34,8 @@ const CreateProduct = () => {
 
     const [subOptions, setSubOptions] = useState([])
     const [show, setShow] = useState(false)
+    const [loading, setLoading] = useState(false)
+
 
 
     const { user } = useSelector((state) => ({ ...state }));
@@ -62,11 +67,9 @@ const CreateProduct = () => {
     const loadCategories = () => {
         getCategories()
             .then(res => {
-                console.log(res.data.data);
+                // console.log(res.data.data);
                 setValues({ ...values, categories: res.data.data })
             })
-
-
     }
 
     const handleCategoryChange = async (e) => {
@@ -82,6 +85,37 @@ const CreateProduct = () => {
     }
 
 
+    const handleFileResizeAndUpload = async (e) => {
+        let files = e.target.files  // multiple img upload ||e.target.files[0]  for one pic upload
+        // console.log(files.length);
+        let allFiles = files.images
+        if (files) {
+            setLoading(true)
+            for (let i = 0; i < files.length; i++) {
+                Resizer.imageFileResizer(files[i], 300, 300, "JPEG", 100, 0, (uri) => {
+                    console.log(uri);
+                    axios.post(`${process.env.REACT_APP_API_REQUEST}/uploadimages`, { image: uri },
+                        {
+                            headers: {
+                                authtoken: user ? user.token : ""
+                            }
+                        })
+                        .then(res => {
+                            setLoading(false)
+                            console.log("IMAGES UPLOAD :   ", res);
+                            console.log(res.data);
+                            allFiles.push(res.data)
+                            setValues({ ...values, images: allFiles })
+
+                        }).catch(err => {
+                            setLoading(false)
+                            console.log(err);
+                        })
+                }, "base64")
+            }
+        }
+
+    }
 
     useEffect(() => {
         loadCategories()
@@ -94,9 +128,18 @@ const CreateProduct = () => {
                     <div className="col-md-2">
                         <AdminNav />
                     </div>
+
                     <div className="col-md-10 mt-2">
                         <h4>Create Product</h4>
                         <hr />
+                        {JSON.stringify(values.images)}
+                        <div className="p-3">
+                            <div className="row">
+                                <label className='btn btn-raised'> Choose File
+                                    <input type="file" multiple hidden accept='images/*' onChange={handleFileResizeAndUpload} />
+                                </label>
+                            </div>
+                        </div>
                         <form onSubmit={handleSubmit} autoComplete='off'>
                             <div className="form-group">
                                 <label >Title</label>
