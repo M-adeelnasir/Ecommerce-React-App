@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Resizer from "react-image-file-resizer";
+import { Avatar, Badge } from 'antd';
+import { LoadingOutlined } from '@ant-design/icons'
 import axios from 'axios';
 import AdminNav from '../../../components/nav/AdminNav'
 import { useSelector } from 'react-redux'
@@ -54,7 +56,7 @@ const CreateProduct = () => {
                 console.log(res);
                 //Show alert to admin product is created
                 window.alert(`"${res.data.data.title}" is created`)
-                // window.location.reload()
+                window.location.reload()
 
 
             }).catch((err) => {
@@ -86,9 +88,9 @@ const CreateProduct = () => {
 
 
     const handleFileResizeAndUpload = async (e) => {
-        let files = e.target.files  // multiple img upload ||e.target.files[0]  for one pic upload
-        // console.log(files.length);
-        let allFiles = files.images
+        let files = e.target.files  // multiple img upload ||e.target.files[0]  for single pic upload
+        let allFiles = values.images;
+        // console.log(allFiles);
         if (files) {
             setLoading(true)
             for (let i = 0; i < files.length; i++) {
@@ -116,6 +118,27 @@ const CreateProduct = () => {
         }
 
     }
+    const handleBadgeClick = (public_id) => {
+        setLoading(true)
+        axios.post(`${process.env.REACT_APP_API_REQUEST}/removeimages`, { public_id },
+            {
+                headers: {
+                    authtoken: user ? user.token : ""
+                }
+            }
+        ).then((res) => {
+            setLoading(false)
+            const currentImages = values.images.filter((img) => {
+                return img.public_id !== public_id
+            })
+
+            setValues({ ...values, images: currentImages })
+
+        }).catch((err) => {
+            setLoading(false)
+            console.log(err);
+        })
+    }
 
     useEffect(() => {
         loadCategories()
@@ -130,15 +153,22 @@ const CreateProduct = () => {
                     </div>
 
                     <div className="col-md-10 mt-2">
-                        <h4>Create Product</h4>
+                        {loading ? <LoadingOutlined className='text-danger' style={{ fontSize: '40px' }} /> : <h4>Create Product</h4>}
                         <hr />
-                        {JSON.stringify(values.images)}
+                        {/* {JSON.stringify(values.images)} */}
                         <div className="p-3">
                             <div className="row">
                                 <label className='btn btn-raised'> Choose File
                                     <input type="file" multiple hidden accept='images/*' onChange={handleFileResizeAndUpload} />
                                 </label>
                             </div>
+                            <div className="row">
+                                {values.images && values.images.map((img) => <Badge count="X" key={img.public_id} onClick={() => handleBadgeClick(img.public_id)} style={{ cursor: "pointer" }} className="mt-2">
+                                    <Avatar src={img.url} size={100} className="m-2" />
+                                </Badge>
+                                )}
+                            </div>
+
                         </div>
                         <form onSubmit={handleSubmit} autoComplete='off'>
                             <div className="form-group">
@@ -203,7 +233,7 @@ const CreateProduct = () => {
                                 </Select>
                             </div>}
 
-                            <button className="btn btn-outline-info ">Save</button>
+                            <button className="btn btn-outline-info mb-3">Save</button>
                         </form>
 
                     </div>
