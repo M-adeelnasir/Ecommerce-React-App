@@ -31,9 +31,15 @@ exports.create = async (req, res) => {
 
 //get all products(list)
 
-exports.getProduct = async (req, res) => {
+exports.getProducts = async (req, res) => {
     try {
         const products = await Product.find({})
+            .limit(parseInt(req.params.count))
+            .populate("category")
+            .populate("subs")
+            .sort([["createdAt", "desc"]])
+            .exec();
+
         res.status(200).json({
             success: false,
             data: products
