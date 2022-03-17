@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import AdminNav from '../../../components/nav/AdminNav'
-import { getAllProducts } from '../../../functions/getAllProducts'
+import { getAllProducts, deleteProduct } from '../../../functions/getAllProducts'
 import AdminProducts from '../../../components/products/AdminProducts'
+import { useSelector } from 'react-redux'
+import { toast } from 'react-toastify'
+
 
 const AllProducts = () => {
     const [products, setProducts] = useState([])
     const [loading, setLoading] = useState(false)
 
+    //redux
+    const { user } = useSelector((state) => ({ ...state }))
 
     const LoadAllProducts = () => {
         setLoading(true)
@@ -24,6 +29,26 @@ const AllProducts = () => {
     useEffect(() => {
         LoadAllProducts();
     }, [])
+
+    const handleRemoveProduct = async (slug) => {
+        if (window.confirm('delete')) {
+            setLoading(true)
+            console.log('requested', slug, user.token);
+
+            deleteProduct(slug, user.token)
+                .then((res) => {
+                    LoadAllProducts()
+                    setLoading(false)
+                    console.log(res);
+                    toast.success("Product Deleted")
+
+                }).catch(err => {
+                    console.log(err);
+                    toast.error(err.message)
+                })
+        }
+    }
+
     return (
         <div className="continer-fluid">
             <div className="row">
@@ -35,7 +60,7 @@ const AllProducts = () => {
                     <div className="row">
                         {products.map((product) => (
                             <div key={product._id} className="col-md-4">
-                                <AdminProducts product={product} />
+                                <AdminProducts product={product} handleRemoveProduct={handleRemoveProduct} />
                             </div>
                         ))}
                     </div>

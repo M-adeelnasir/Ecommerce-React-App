@@ -51,3 +51,18 @@ exports.getProducts = async (req, res) => {
         })
     }
 }
+
+exports.deleteProduct = async (req, res) => {
+    try {
+        const product = await Product.findOneAndRemove(req.params.slug).exec()
+        res.json({
+            success: true,
+            data: {}
+        })
+    } catch (err) {
+        res.status(400).json({
+            success: false,
+            data: "Product failed to delete"
+        })
+    }
+}
