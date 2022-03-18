@@ -28,6 +28,7 @@ const UpdateProduct = () => {
     const [categories, setCategories] = useState([])
     const [subOptions, setSubOptions] = useState([])
     const [arryOfSubs, setArryOfSubs] = useState([])
+    const [selectCategory, setSelectCategory] = useState("")
     //lets destructure
     const { title, description, price, category, subs, shipping, quantity, images, colors, brands, brand, color } = values
 
@@ -78,16 +79,27 @@ const UpdateProduct = () => {
                 console.log(res.data.data);
                 setCategories(res.data.data)
             })
+
     }
 
     const handleCategoryChange = async (e) => {
         e.preventDefault();
-        setValues({ ...values, subs: [], category: e.target.value })
+        setValues({ ...values, subs: [] })
+        setSelectCategory(e.target.value)
         getSubCat(e.target.value)
             .then(res => {
                 // console.log(res.data.data);
                 setSubOptions(res.data.data)
             })
+
+        //if user change category and came backe to prev cat
+        //show him his prev cat and sub cat
+        if (values.category._id === e.target.value) {
+            loadProduct()
+        }
+
+        //reset sub categories on change
+        setArryOfSubs([])
 
     }
 
@@ -142,8 +154,7 @@ const UpdateProduct = () => {
                             </div>
                             <div className="form-group">
                                 <label>Category</label>
-                                <select name="category" className='form-control' onChange={handleCategoryChange}>
-                                    <option >{category ? category.name : "Please Select Category"}</option>
+                                <select name="category" className='form-control' onChange={handleCategoryChange} value={selectCategory ? selectCategory : category._id}>
                                     {categories.length > 0 && categories.map((cat) => (<option key={cat._id} value={cat._id}>{cat.name}</option>))}
                                 </select>
                             </div>
@@ -153,7 +164,7 @@ const UpdateProduct = () => {
                                     allowClear
                                     style={{ width: '100%' }}
                                     placeholder="Please select"
-                                    onChange={(value) => setValues({ ...values, subs: value })}
+                                    onChange={(value) => setArryOfSubs(value)}
                                     value={arryOfSubs}
                                 >
                                     {subOptions.map((sub) => <Option key={sub._id} value={sub._id}>{sub.name}</Option>)}
