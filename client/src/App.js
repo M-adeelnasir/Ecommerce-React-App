@@ -22,6 +22,7 @@ import SubCreate from './pages/admin/sub/SubCreate'
 import UpdateSub from './pages/admin/sub/UpdateSub';
 import CreateProduct from './pages/admin/product/CreateProduct';
 import AllProducts from './pages/admin/product/AllProducts';
+import UpdateProduct from './pages/admin/product/UpdateProduct';
 const App = () => {
 
   const dispatch = useDispatch();
@@ -79,6 +80,8 @@ const App = () => {
         <AdminRoute exact path='/admin/sub/:slug'><UpdateSub /></AdminRoute>
         <AdminRoute exact path='/admin/product'><CreateProduct /></AdminRoute>
         <AdminRoute exact path='/admin/products'><AllProducts /></AdminRoute>
+        <AdminRoute exact path='/admin/product/update/:slug'><UpdateProduct /></AdminRoute>
+
 
 
       </Switch>

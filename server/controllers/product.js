@@ -66,3 +66,21 @@ exports.deleteProduct = async (req, res) => {
         })
     }
 }
+
+exports.read = async (req, res) => {
+    try {
+        const product = await Product.findOne({ slug: req.params.slug })
+            .populate('category')
+            .populate('subs')
+            .exec()
+        res.json({
+            success: true,
+            data: product
+        })
+    } catch (err) {
+        res.status(400).json({
+            success: false,
+            data: "Product get to failed"
+        })
+    }
+}
