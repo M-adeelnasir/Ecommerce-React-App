@@ -1,15 +1,22 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import Resizer from "react-image-file-resizer";
+import { Avatar, Badge } from 'antd';
+import { LoadingOutlined } from '@ant-design/icons'
+import { useParams, useHistory } from 'react-router-dom';
 import AdminNav from '../../../components/nav/AdminNav'
 import { useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
+import { updateProduct } from '../../../functions/getAllProducts';
 import { getSingleProduct } from '../../../functions/getAllProducts';
 import { getCategories, getSubCat } from '../../../functions/category'
 import { Select } from 'antd';
 const { Option } = Select;
 
+
 const UpdateProduct = () => {
+
+    const { user } = useSelector((state) => ({ ...state }))
 
     const [values, setValues] = useState({
         title: "",
@@ -29,10 +36,13 @@ const UpdateProduct = () => {
     const [subOptions, setSubOptions] = useState([])
     const [arryOfSubs, setArryOfSubs] = useState([])
     const [selectCategory, setSelectCategory] = useState("")
+    const [loading, setLoading] = useState(false)
     //lets destructure
     const { title, description, price, category, subs, shipping, quantity, images, colors, brands, brand, color } = values
 
     const { slug } = useParams()
+    const history = useHistory()
+
 
     const loadProduct = () => {
         getSingleProduct(slug)
@@ -61,6 +71,19 @@ const UpdateProduct = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        setLoading(true)
+        values.subs = arryOfSubs;
+        values.category = selectCategory ? selectCategory : values.category
+        updateProduct(slug, values, user.token)
+            .then((res) => {
+
+                toast.success(`${res.data.data.title} is update`)
+                console.log(res.data.data);
+                history.push('/admin/products')
+            }).catch(err => {
+                console.log(err);
+                toast.error(err.response.data.err)
+            })
 
     }
     const handleChange = (e) => {
@@ -100,7 +123,62 @@ const UpdateProduct = () => {
 
         //reset sub categories on change
         setArryOfSubs([])
+    }
 
+
+    const handleFileResizeAndUpload = async (e) => {
+        let files = e.target.files  // multiple img upload ||e.target.files[0]  for single pic upload
+        let allFiles = values.images;
+        // console.log(allFiles);
+        if (files) {
+            setLoading(true)
+            for (let i = 0; i < files.length; i++) {
+                Resizer.imageFileResizer(files[i], 300, 300, "JPEG", 100, 0, (uri) => {
+                    console.log(uri);
+                    axios.post(`${process.env.REACT_APP_API_REQUEST}/uploadimages`, { image: uri },
+                        {
+                            headers: {
+                                authtoken: user ? user.token : ""
+                            }
+                        })
+                        .then(res => {
+                            setLoading(false)
+                            console.log("IMAGES UPLOAD :   ", res);
+                            console.log(res.data);
+                            allFiles.push(res.data)
+                            setValues({ ...values, images: allFiles })
+
+                        }).catch(err => {
+                            setLoading(false)
+                            console.log(err);
+                        })
+                }, "base64")
+            }
+        }
+
+    }
+
+
+    const handleBadgeClick = (public_id) => {
+        setLoading(true)
+        axios.post(`${process.env.REACT_APP_API_REQUEST}/removeimages`, { public_id },
+            {
+                headers: {
+                    authtoken: user ? user.token : ""
+                }
+            }
+        ).then((res) => {
+            setLoading(false)
+            const currentImages = values.images.filter((img) => {
+                return img.public_id !== public_id
+            })
+
+            setValues({ ...values, images: currentImages })
+
+        }).catch((err) => {
+            setLoading(false)
+            console.log(err);
+        })
     }
 
     return (
@@ -112,7 +190,24 @@ const UpdateProduct = () => {
                         <AdminNav />
                     </div>
                     <div className="col-md-10 mt-2">
-                        <h1>Product Update</h1>
+                        {loading ? <LoadingOutlined className='text-danger' style={{ fontSize: '40px' }} /> : <h4>Update Product</h4>}
+                        <hr />
+
+                        <div className="p-3">
+                            <div className="row">
+                                <label className='btn btn-raised btn-info'> Choose File
+                                    <input type="file" multiple hidden accept='images/*' onChange={handleFileResizeAndUpload} />
+                                </label>
+                            </div>
+                            <div className="row">
+                                {values.images && values.images.map((img) => <Badge count="X" key={img.public_id} onClick={() => handleBadgeClick(img.public_id)} style={{ cursor: "pointer" }} className="mt-2">
+                                    <Avatar src={img.url} size={100} className="m-2" />
+                                </Badge>
+                                )}
+                            </div>
+
+                        </div>
+
                         {/* {JSON.stringify(values)} */}
                         <form onSubmit={handleSubmit} autoComplete='off'>
                             <div className="form-group">

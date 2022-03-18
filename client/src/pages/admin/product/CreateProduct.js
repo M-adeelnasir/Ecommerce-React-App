@@ -158,7 +158,7 @@ const CreateProduct = () => {
                         {/* {JSON.stringify(values.images)} */}
                         <div className="p-3">
                             <div className="row">
-                                <label className='btn btn-raised'> Choose File
+                                <label className='btn btn-raised btn-info'> Choose File
                                     <input type="file" multiple hidden accept='images/*' onChange={handleFileResizeAndUpload} />
                                 </label>
                             </div>

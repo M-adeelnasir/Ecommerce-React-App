@@ -84,3 +84,22 @@ exports.read = async (req, res) => {
         })
     }
 }
+
+exports.updateProduct = async (req, res) => {
+    try {
+        if (req.body.title) {
+            req.body.slug = slugify(req.body.title)
+        }
+
+        const product = await Product.findOneAndUpdate({ slug: req.params.slug }, req.body, { new: true, runValidators: true })
+        res.json({
+            success: true,
+            data: product
+        })
+    } catch (err) {
+        res.status(400).json({
+            success: false,
+            data: "Product Update to failed"
+        })
+    }
+}
