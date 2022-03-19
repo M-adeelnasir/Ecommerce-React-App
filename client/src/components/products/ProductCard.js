@@ -1,13 +1,13 @@
 import React from 'react'
-import { Link } from 'react-router-dom';
-
 import { Card } from 'antd';
+import { Link } from 'react-router-dom';
+import { ShoppingCartOutlined, EyeOutlined } from '@ant-design/icons';
 
 const { Meta } = Card;
 
-const AdminProducts = ({ product, handleRemoveProduct }) => {
-    const { title, description, images, slug } = product
+const ProductCard = ({ product }) => {
 
+    const { images, title, description } = product
     return (
         <>
             <Card
@@ -16,19 +16,18 @@ const AdminProducts = ({ product, handleRemoveProduct }) => {
                     style={{ height: "150px", objectFit: "cover", with: "100%" }}
                     className="p-1" />}
                 actions={[
-                    <Link to={`/admin/product/update/${slug}`}>
-                        <i className="fa fa-pencil text-primary btn"></i>
-                    </Link>, <i
-                        onClick={() => handleRemoveProduct(slug)}
-                        className="fa fa-trash-o text-danger btn"
-                    >
-                    </i>]}
+
+                    <Link to="/login">
+                        <EyeOutlined className='text-warning' /><br /> View Product
+                    </Link>,
+                    <><ShoppingCartOutlined className='text-danger' /> <br />Add to Cart</>]}
             >
                 <Meta title={title} description={`${description && description.substring(0, 50)}...`} />
 
             </Card>
         </>
     )
+
 }
 
-export default AdminProducts
+export default ProductCard

@@ -11,7 +11,7 @@ import { createOrUpdate } from '../../functions/auth';
 
 const Login = ({ history }) => {
     const [email, setEmail] = useState('adnasirkbw@gmail.com');
-    const [password, setPassword] = useState('1234567890')
+    const [password, setPassword] = useState('1234567')
     const [loading, setLoading] = useState(false)
 
     const { user } = useSelector((state) => ({ ...state }))
@@ -104,7 +104,7 @@ const Login = ({ history }) => {
             });
     }
 
-    //Login with Google account
+    //Login with facebook account
     const facebookProvider = new firebase.auth.FacebookAuthProvider();
     const handlefacebookLogin = () => {
         firebase

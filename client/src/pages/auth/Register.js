@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 import { auth } from '../../firebase';
 import { useSelector } from 'react-redux';
 const Register = ({ history }) => {
-    const [email, setEmail] = useState("adnasirkbw@gmail.com")
+    const [email, setEmail] = useState("")
 
     const { user } = useSelector((state) => ({ ...state }))
     useEffect(() => {
@@ -26,7 +26,6 @@ const Register = ({ history }) => {
                 setEmail("")
             })
             .catch((error) => {
-                console.log("he;");
                 var errorMessage = error.message;
                 console.log(errorMessage);
             });

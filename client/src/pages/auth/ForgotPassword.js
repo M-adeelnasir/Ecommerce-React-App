@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
-import firebase from 'firebase/app'
 import { auth } from '../../firebase'
 
 
 const ForgotPassword = ({ history }) => {
     const [loading, setLoading] = useState(false)
-    const [email, setEmail] = useState('adnasirkbw@gmail.com');
+    const [email, setEmail] = useState('');
 
     //redux state
     const { user } = useSelector((state) => ({ ...state }))
@@ -32,8 +31,6 @@ const ForgotPassword = ({ history }) => {
             setLoading(false)
             setEmail('')
             toast.success("Check your Mail to rest Password")
-
-
         } catch (err) {
             setLoading(false)
             console.log(err);

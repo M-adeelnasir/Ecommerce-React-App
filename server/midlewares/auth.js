@@ -1,5 +1,7 @@
 const admin = require('../firebase/index');
 const User = require('../models/userSchema')
+
+
 exports.checkAuth = async (req, res, next) => {
     console.log(req.headers);
 
@@ -22,7 +24,7 @@ exports.checkAuth = async (req, res, next) => {
 exports.checkAdmin = async (req, res, next) => {
     const { email } = req.user
     const user = await User.findOne({ email }).exec();
-    console.log(user.role);
+    // console.log(user.role);
     if (user.role !== 'admin') {
         res.status(403).json({
             data: `${user.name} has no admin previlages`,
