@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { getAllProducts } from '../functions/getAllProducts'
 import ProductCard from '../components/products/ProductCard'
+import Jumbotron from '../components/products/Jumbotron'
+import SkeletonCard from '../components/products/SkeletonCard'
 const Home = () => {
     const [products, setProducts] = useState([])
     const [loading, setLoading] = useState(false)
@@ -31,17 +33,25 @@ const Home = () => {
             {/* <div>{JSON.stringify(products)}</div>
             {products.length} */}
 
-            <div className="jumbotron">
-                {loading ? <h4>Loading...</h4> : <h4>All Products</h4>}
+            <div className="jumbotron bg-light text-danger h1 font-weight-bold text-center" >
+                {/* Pass the array of Text */}
+                <Jumbotron text={['Latest Products', 'New Arrivals', 'Best Sellers']} />
             </div>
             <div className="container">
-                <div className="row">
-                    {products.map((product) => (
-                        <div key={product._id} className='col-md-4'>
-                            <ProductCard product={product} />
+
+
+                {loading ?
+                    (<SkeletonCard count={3} />)
+                    : (
+                        <div className="row">
+                            {products.map((product) => (
+                                <div key={product._id} className='col-md-4'>
+                                    <ProductCard product={product} />
+                                </div>
+                            ))}
                         </div>
-                    ))}
-                </div>
+                    )}
+
             </div>
 
         </>
