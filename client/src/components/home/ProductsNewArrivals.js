@@ -3,16 +3,20 @@ import ProductCard from '../products/ProductCard'
 import Jumbotron from '../products/Jumbotron'
 import SkeletonCard from '../products/SkeletonCard'
 import { getSortedProducts } from '../../functions/getAllProducts'
+import { getProductCount } from '../../functions/getAllProducts'
+import { Pagination } from 'antd'
 
 
 const ProductsNewArrivals = () => {
     const [products, setProducts] = useState([])
     const [loading, setLoading] = useState(false)
+    const [page, setPage] = useState(1)
+    const [productCounts, setProductCounts] = useState(0)
 
 
     const loadProducts = () => {
         setLoading(true)
-        getSortedProducts("createdAt", "desc", 3)
+        getSortedProducts("createdAt", "desc", page)
             .then((res) => {
                 setLoading(false)
                 // console.log(res.data.data);
@@ -25,9 +29,12 @@ const ProductsNewArrivals = () => {
 
     useEffect(() => {
         loadProducts()
+    }, [page])
+
+    useEffect(() => {
+        getProductCount()
+            .then((res) => setProductCounts(res.data))
     }, [])
-
-
 
 
     return (
@@ -48,7 +55,11 @@ const ProductsNewArrivals = () => {
                         </div>
                     )}
             </div>
-
+            <div className="row">
+                <div className="col-md-4 offset-md-4 text-center pt-2 p-2 mt-5">
+                    <Pagination current={page} total={(productCounts / 3) * 10} onChange={(value) => setPage(value)} />
+                </div>
+            </div>
         </>
     )
 }

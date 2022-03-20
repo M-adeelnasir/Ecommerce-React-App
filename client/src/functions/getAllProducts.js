@@ -29,13 +29,29 @@ export const updateProduct = async (slug, product, authToken) => {
     )
 }
 
+//without Pagination
+// export const getSortedProducts = async (sort, order, limit) => {
+//     return await axios.post(`${process.env.REACT_APP_API_REQUEST}/products`,
+//         {
+//             sort,
+//             order,
+//             limit
+//         }
+//     )
+// }
 
-export const getSortedProducts = async (sort, order, limit) => {
+
+//with pagination
+export const getSortedProducts = async (sort, order, page) => {
     return await axios.post(`${process.env.REACT_APP_API_REQUEST}/products`,
         {
             sort,
             order,
-            limit
+            page
         }
     )
+}
+
+export const getProductCount = async () => {
+    return await axios.get(`${process.env.REACT_APP_API_REQUEST}/products/count`)
 }

@@ -104,15 +104,49 @@ exports.updateProduct = async (req, res) => {
     }
 }
 
+
+//withOut pagination
+// exports.list = async (req, res) => {
+//     try {
+//         //get product {createdAt, assen/desc, limit of products}
+//         const { sort, order, limit } = req.body;
+//         const products = await Product.find({})
+//             .populate('category')
+//             .populate('subs')
+//             .sort([[sort, order]])
+//             .limit(limit)
+//             .exec()
+
+//         res.json({
+//             success: true,
+//             data: products
+//         })
+//     } catch (err) {
+//         console.log(err);
+//         res.status(400).json({
+//             success: false,
+//             data: "Product get to failed"
+//         })
+//     }
+// }
+
+
+//with pagination
+
 exports.list = async (req, res) => {
     try {
-        //get product {createdAt, assen/desc, limit of products}
-        const { sort, order, limit } = req.body;
+
+        const { sort, order, page } = req.body;
+
+        const currentPage = page || 1;
+        const perPage = 3
+
         const products = await Product.find({})
+            .skip((currentPage - 1) * perPage)
             .populate('category')
             .populate('subs')
             .sort([[sort, order]])
-            .limit(limit)
+            .limit(perPage)
             .exec()
 
         res.json({
@@ -126,4 +160,9 @@ exports.list = async (req, res) => {
             data: "Product get to failed"
         })
     }
+}
+
+exports.getProductsCount = async (req, res) => {
+    const total = await Product.find({}).estimatedDocumentCount().exec();
+    res.json(total)
 }
