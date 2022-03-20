@@ -8,7 +8,7 @@ const { create, getProducts, deleteProduct, read, updateProduct, list, getProduc
 
 router.post('/product', checkAuth, checkAdmin, create)
 //should be on top before getting the products all
-router.get('/products/count', getProductsCount)
+router.get('/products/total', getProductsCount)
 
 router.get('/products/:count', getProducts)
 router.delete('/product/delete/:slug', checkAuth, checkAdmin, deleteProduct)

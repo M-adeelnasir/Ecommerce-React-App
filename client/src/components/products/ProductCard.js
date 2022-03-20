@@ -22,7 +22,7 @@ const ProductCard = ({ product }) => {
                     className="p-1" />}
                 actions={[
 
-                    <Link to={`/admin/product/update/${slug}`}>
+                    <Link to={`/product/${slug}`}>
                         <EyeOutlined className='text-info' /><br /> <p className='text-info'>View Product</p>
                     </Link>,
                     <><ShoppingCartOutlined className='text-danger' /> <br /><p className='text-danger'>Add to Cart</p></>]}

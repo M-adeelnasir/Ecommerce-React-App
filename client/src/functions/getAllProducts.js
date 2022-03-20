@@ -47,11 +47,11 @@ export const getSortedProducts = async (sort, order, page) => {
         {
             sort,
             order,
-            page
+            page,
         }
     )
 }
 
 export const getProductCount = async () => {
-    return await axios.get(`${process.env.REACT_APP_API_REQUEST}/products/count`)
+    return await axios.get(`${process.env.REACT_APP_API_REQUEST}/products/total`)
 }

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import ProductCard from '../products/ProductCard'
-import Jumbotron from '../products/Jumbotron'
 import SkeletonCard from '../products/SkeletonCard'
 import { getSortedProducts } from '../../functions/getAllProducts'
 import { getProductCount } from '../../functions/getAllProducts'
@@ -36,6 +35,11 @@ const ProductsNewArrivals = () => {
             .then((res) => setProductCounts(res.data))
     }, [])
 
+    const handleChange = (value) => {
+        console.log(value);
+        setPage(value)
+    }
+
 
     return (
         <>
@@ -57,7 +61,8 @@ const ProductsNewArrivals = () => {
             </div>
             <div className="row">
                 <div className="col-md-4 offset-md-4 text-center pt-2 p-2 mt-5">
-                    <Pagination current={page} total={(productCounts / 3) * 10} onChange={(value) => setPage(value)} />
+                    <Pagination current={page} total={(productCounts / 3) * 10} onChange={handleChange} />
+
                 </div>
             </div>
         </>

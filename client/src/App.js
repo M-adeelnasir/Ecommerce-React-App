@@ -23,6 +23,8 @@ import UpdateSub from './pages/admin/sub/UpdateSub';
 import CreateProduct from './pages/admin/product/CreateProduct';
 import AllProducts from './pages/admin/product/AllProducts';
 import UpdateProduct from './pages/admin/product/UpdateProduct';
+import Product from './pages/Product';
+import "react-responsive-carousel/lib/styles/carousel.min.css";
 const App = () => {
 
   const dispatch = useDispatch();
@@ -81,6 +83,9 @@ const App = () => {
         <AdminRoute exact path='/admin/product'><CreateProduct /></AdminRoute>
         <AdminRoute exact path='/admin/products'><AllProducts /></AdminRoute>
         <AdminRoute exact path='/admin/product/update/:slug'><UpdateProduct /></AdminRoute>
+
+        <Route exact path='/product/:slug' component={Product} />
+
 
 
 

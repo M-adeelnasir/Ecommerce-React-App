@@ -1,3 +1,8 @@
 .flr {
   float: right;
 }
+
+.slider img {
+  height: 450px;
+  object-fit: cover;
+}
