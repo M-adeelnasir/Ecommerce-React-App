@@ -1,32 +1,11 @@
-import React, { useState, useEffect } from 'react'
-import ProductCard from '../components/products/ProductCard'
+import React from 'react'
 import Jumbotron from '../components/products/Jumbotron'
-import SkeletonCard from '../components/products/SkeletonCard'
-import { getSortedProducts } from '../functions/getAllProducts'
+import ProductsNewArrivals from '../components/home/ProductsNewArrivals'
+import BestSellers from '../components/home/BestSellers'
+
+
+
 const Home = () => {
-    const [products, setProducts] = useState([])
-    const [loading, setLoading] = useState(false)
-
-
-    const loadProducts = () => {
-        setLoading(true)
-        getSortedProducts("createdAt", "desc", 3)
-            .then((res) => {
-                setLoading(false)
-                // console.log(res.data.data);
-                setProducts(res.data.data)
-            }).catch(err => {
-                setLoading(false)
-                console.log(err);
-            })
-    }
-
-    useEffect(() => {
-        loadProducts()
-    }, [])
-
-
-
 
     return (
         <>
@@ -40,21 +19,11 @@ const Home = () => {
             <div className="jumbotron bg-light text-center display-4 p-3 mt-5 mb-5">
                 New Arrivals
             </div>
-            <div className="container">
-                {loading ?
-                    (<SkeletonCard count={3} />)
-                    : (
-                        <div className="row">
-                            {products.map((product) => (
-
-                                <div key={product._id} className='col-md-4'>
-                                    <ProductCard product={product} />
-                                </div>
-                            ))}
-                        </div>
-                    )}
+            <ProductsNewArrivals />
+            <div className="jumbotron bg-light text-center display-4 p-3 mt-5 mb-5">
+                Best Sellers
             </div>
-
+            <BestSellers />
         </>
     )
 }
