@@ -103,3 +103,27 @@ exports.updateProduct = async (req, res) => {
         })
     }
 }
+
+exports.list = async (req, res) => {
+    try {
+        //get product {createdAt, assen/desc, limit of products}
+        const { sort, order, limit } = req.body;
+        const products = await Product.find({})
+            .populate('category')
+            .populate('subs')
+            .sort([[sort, order]])
+            .limit(limit)
+            .exec()
+
+        res.json({
+            success: true,
+            data: products
+        })
+    } catch (err) {
+        console.log(err);
+        res.status(400).json({
+            success: false,
+            data: "Product get to failed"
+        })
+    }
+}
