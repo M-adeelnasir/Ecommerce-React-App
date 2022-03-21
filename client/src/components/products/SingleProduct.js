@@ -1,7 +1,12 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import StarRatings from 'react-star-ratings';
 
+import { useSelector } from 'react-redux'
+import { toast } from 'react-toastify'
+import { Modal } from 'antd'
+import { StarOutlined } from '@ant-design/icons'
+
+import StarRatings from 'react-star-ratings';
 import { HeartOutlined, ShoppingCartOutlined } from '@ant-design/icons'
 import ProductListItem from './ProductListItem';
 import { Carousel } from 'react-responsive-carousel';
@@ -13,6 +18,12 @@ const { TabPane } = Tabs;
 
 
 const SingleProduct = ({ product }) => {
+
+
+    const [modalVisible, setModalVisible] = useState(false)
+
+    const { user } = useSelector((state) => ({ ...state }));
+
 
     const { images, title, description, _id } = product
 
@@ -43,16 +54,31 @@ const SingleProduct = ({ product }) => {
             <div className="col-md-5">
                 <h1 className='bg-info p-3'>{title}</h1>
 
-                <StarRatings
-                    name={_id}
-                    rating={3}
-                    starRatedColor="red"
-                    numberOfStars={5}
-                    isSelectable={true}
-                    changeRating={(newRating, name) => console.log(name, newRating)}
+
+                <div onClick={() => setModalVisible(true)}>
+                    <StarOutlined className='text-danger' /> <br />{" "}
+                    {user ? "Leave Rating" : "Login to leave Rating"}
+                </div>
+                <Modal
+                    title="Leave your Rating"
+                    visible={modalVisible}
+                    onOk={() => {
+                        setModalVisible(false)
+                        toast.success("Thanks for your Review")
+                    }}
+                    onCancel={() => setModalVisible(false)}
+                >
+                    <StarRatings
+                        name={_id}
+                        rating={3}
+                        starRatedColor="red"
+                        numberOfStars={5}
+                        isSelectable={true}
+                        changeRating={(newRating, name) => console.log(name, newRating)}
+                    />
+                </Modal>
 
 
-                />
 
                 <Card
                     actions={[
