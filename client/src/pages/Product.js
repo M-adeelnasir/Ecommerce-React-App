@@ -27,6 +27,13 @@ const Product = ({ match }) => {
                 <div className="row pt-4">
                     <SingleProduct product={product} />
                 </div>
+
+                <div className="row p-5">
+                    <div className="col text-center pt-5 pb-5">
+                        <hr />
+                        <h4> Related Products</h4>
+                    </div>
+                </div>
             </div>
 
         </>

@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
+
 const ProductListItem = ({ product }) => {
 
     const { price, category, subs, shipping, color, brand, quantity, sold } = product
