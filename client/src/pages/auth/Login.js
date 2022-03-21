@@ -18,19 +18,39 @@ const Login = ({ history }) => {
     const dispatch = useDispatch();
 
     const roleBaseRedirect = (res) => {
-        if (res.data.data.role === "admin") {
-            history.push('/admin/dashboard')
-        } else {
-            history.push('/user/history')
+        //check if intended (push the user to back his page from which he came to login)(SingleProsuct.js check push) 
+        let intended = history.location.state
+        // console.log(intended);// provide the url you want to push
+        if (intended) {
+            history.push(intended.from)
+        }
+        else {
+            if (res.data.data.role === "admin") {
+                history.push('/admin/dashboard')
+            } else {
+                history.push('/user/history')
+            }
         }
     }
-    //if the user is already looged in to protect the rout
+    // if the user is already looged in to protect the rout
     useEffect(() => {
-        // console.log(user);
-        if (user && user.token) {
-            history.push('/')
+
+        let intended = history.location.state
+        if (intended) {
+            return
         }
+
+        else {
+            // console.log(user);
+            if (user && user.token) {
+                history.push('/')
+            }
+        }
+
+
     }, [user, history])
+
+
     const handleLoginSubmite = async (e) => {
         e.preventDefault()
         setLoading(true)

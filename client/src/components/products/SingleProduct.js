@@ -1,11 +1,10 @@
-import React, { useState } from 'react'
-import { Link, useHistory } from 'react-router-dom'
+import React, { useState, useEffect } from 'react'
+import { Link, useHistory, useParams } from 'react-router-dom'
 
 import { useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import { Modal } from 'antd'
 import { StarOutlined } from '@ant-design/icons'
-
 import StarRatings from 'react-star-ratings';
 import { HeartOutlined, ShoppingCartOutlined } from '@ant-design/icons'
 import ProductListItem from './ProductListItem';
@@ -24,6 +23,8 @@ const SingleProduct = ({ product }) => {
     const { images, title, description, _id } = product
 
     const history = useHistory();
+    const { slug } = useParams()
+
 
 
     //Handel modal if user is logged in he can commit rating otherwise he has to loading
@@ -31,7 +32,13 @@ const SingleProduct = ({ product }) => {
         if (user && user.token) {
             setModalVisible(true)
         } else {
-            history.push('/login')
+
+            // history.push('/login')
+            //after login push user to the same page from where he pushed to login
+            history.push({
+                pathname: "/login",
+                state: { from: `/product/${slug}` }
+            })
         }
 
     }
