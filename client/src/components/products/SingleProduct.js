@@ -1,6 +1,7 @@
 import React from 'react'
-
 import { Link } from 'react-router-dom'
+import StarRatings from 'react-star-ratings';
+
 import { HeartOutlined, ShoppingCartOutlined } from '@ant-design/icons'
 import ProductListItem from './ProductListItem';
 import { Carousel } from 'react-responsive-carousel';
@@ -10,9 +11,10 @@ const { TabPane } = Tabs;
 
 
 
+
 const SingleProduct = ({ product }) => {
 
-    const { images, title, description } = product
+    const { images, title, description, _id } = product
 
     return (
         <>
@@ -26,7 +28,6 @@ const SingleProduct = ({ product }) => {
 
                 {/* Ant Design Tabs */}
                 <Tabs type='card'>
-
                     <TabPane tab='description' key={1} className='text-dark'>
                         <p className='m-3 text-dark'>{description && description}</p>
                     </TabPane>
@@ -41,8 +42,19 @@ const SingleProduct = ({ product }) => {
 
             <div className="col-md-5">
                 <h1 className='bg-info p-3'>{title}</h1>
-                <Card
 
+                <StarRatings
+                    name={_id}
+                    rating={3}
+                    starRatedColor="red"
+                    numberOfStars={5}
+                    isSelectable={true}
+                    changeRating={(newRating, name) => console.log(name, newRating)}
+
+
+                />
+
+                <Card
                     actions={[
                         <>
                             <ShoppingCartOutlined className='text-success' /> <br /> Add to Cart
