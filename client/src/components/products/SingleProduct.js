@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 
 import { useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
@@ -15,17 +15,26 @@ const { TabPane } = Tabs;
 
 
 
-
-
 const SingleProduct = ({ product }) => {
 
 
     const [modalVisible, setModalVisible] = useState(false)
-
     const { user } = useSelector((state) => ({ ...state }));
 
-
     const { images, title, description, _id } = product
+
+    const history = useHistory();
+
+
+    //Handel modal if user is logged in he can commit rating otherwise he has to loading
+    const handelModal = () => {
+        if (user && user.token) {
+            setModalVisible(true)
+        } else {
+            history.push('/login')
+        }
+
+    }
 
     return (
         <>
@@ -55,28 +64,8 @@ const SingleProduct = ({ product }) => {
                 <h1 className='bg-info p-3'>{title}</h1>
 
 
-                <div onClick={() => setModalVisible(true)}>
-                    <StarOutlined className='text-danger' /> <br />{" "}
-                    {user ? "Leave Rating" : "Login to leave Rating"}
-                </div>
-                <Modal
-                    title="Leave your Rating"
-                    visible={modalVisible}
-                    onOk={() => {
-                        setModalVisible(false)
-                        toast.success("Thanks for your Review")
-                    }}
-                    onCancel={() => setModalVisible(false)}
-                >
-                    <StarRatings
-                        name={_id}
-                        rating={3}
-                        starRatedColor="red"
-                        numberOfStars={5}
-                        isSelectable={true}
-                        changeRating={(newRating, name) => console.log(name, newRating)}
-                    />
-                </Modal>
+                {/* Handel Modal and star Ratings */}
+
 
 
 
@@ -89,7 +78,32 @@ const SingleProduct = ({ product }) => {
                             <HeartOutlined className='text-info' />
                             <br />
                             Add to Whishlist
-                        </Link>
+                        </Link>,
+                        <>
+
+                            <div onClick={handelModal}>
+                                <StarOutlined className='text-danger' /> <br />{" "}
+                                {user ? "Leave Rating" : "Login to leave Rating"}
+                            </div>
+                            <Modal
+                                title="Leave your Rating"
+                                visible={modalVisible}
+                                onOk={() => {
+                                    setModalVisible(false)
+                                    toast.success("Thanks for your Review")
+                                }}
+                                onCancel={() => setModalVisible(false)}
+                            >
+                                <StarRatings
+                                    name={_id}
+                                    rating={3}
+                                    starRatedColor="red"
+                                    numberOfStars={5}
+                                    isSelectable={true}
+                                    changeRating={(newRating, name) => console.log(name, newRating)}
+                                />
+                            </Modal>
+                        </>
                     ]}
                 >
                     <ProductListItem product={product} />
