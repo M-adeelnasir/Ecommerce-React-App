@@ -225,5 +225,32 @@ exports.productStar = async (req, res) => {
 
 
 
+exports.listRelatedProducts = async (req, res) => {
+    try {
+        //get the product
+        const product = await Product.findById(req.params.productId)
+        //sub product base upon that product category
+        const related = await Product.find({
+            _id: { $ne: product._id }, //will neglect($ne) the parent product and find the product of its category
+            category: product.category
+        })
+            .limit(3)
+            .populate('category')
+            .populate('subs')
+            .populate('ratings')
+            .exec()
+        res.json({
+            success: true,
+            data: related
+        })
+    } catch (err) {
+        console.log(err);
+        res.status(400).json({
+            success: false,
+            data: err.message
+        })
+    }
 
-//merg request  fetch request pull request stash gitignore push braches and tags 
+
+
+}
