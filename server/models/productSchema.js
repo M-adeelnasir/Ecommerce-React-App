@@ -58,7 +58,7 @@ const productSchema = new mongoose.Schema({
         enum: ["Apple", "Samsung", "Hp", "Lenovo", "Asus"]
     },
     ratings: [{
-        type: Number,
+        type: { type: Number },
         postedBy: { type: ObjectId, ref: "User" }
     }]
 

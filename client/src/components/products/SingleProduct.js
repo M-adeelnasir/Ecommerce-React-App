@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useHistory, useParams } from 'react-router-dom'
+import { productStar } from '../../functions/getAllProducts'
 
 import { useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
@@ -18,6 +19,7 @@ const SingleProduct = ({ product }) => {
 
 
     const [modalVisible, setModalVisible] = useState(false)
+    const [star, setStar] = useState(0)
     const { user } = useSelector((state) => ({ ...state }));
 
     const { images, title, description, _id } = product
@@ -30,6 +32,7 @@ const SingleProduct = ({ product }) => {
     //Handel modal if user is logged in he can commit rating otherwise he has to loading
     const handelModal = () => {
         if (user && user.token) {
+            console.log(user, user.token);
             setModalVisible(true)
         } else {
 
@@ -40,6 +43,21 @@ const SingleProduct = ({ product }) => {
                 state: { from: `/product/${slug}` }
             })
         }
+
+    }
+
+
+    const handelStarClick = (newRating, name) => {
+        setStar(newRating);
+        // console.log(newRating, name);
+        console.log(name, newRating, user.token);
+        productStar(name, newRating, user.token)
+            .then((res) => {
+                console.log(res.data);
+
+            }).catch(err => {
+                console.log(err);
+            })
 
     }
 
@@ -70,11 +88,7 @@ const SingleProduct = ({ product }) => {
             <div className="col-md-5">
                 <h1 className='bg-info p-3'>{title}</h1>
 
-
                 {/* Handel Modal and star Ratings */}
-
-
-
 
                 <Card
                     actions={[
@@ -102,12 +116,12 @@ const SingleProduct = ({ product }) => {
                                 onCancel={() => setModalVisible(false)}
                             >
                                 <StarRatings
-                                    name={_id}
-                                    rating={3}
+                                    name={_id} //name will store the _id of prduct
+                                    rating={star}
                                     starRatedColor="red"
                                     numberOfStars={5}
                                     isSelectable={true}
-                                    changeRating={(newRating, name) => console.log(name, newRating)}
+                                    changeRating={handelStarClick}
                                 />
                             </Modal>
                         </>

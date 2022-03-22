@@ -13,11 +13,13 @@ router.get('/products/total', getProductsCount)
 router.get('/products/:count', getProducts)
 router.delete('/product/delete/:slug', checkAuth, checkAdmin, deleteProduct)
 router.get('/product/:slug', read)
+
 router.put('/product/update/:slug', checkAuth, checkAdmin, updateProduct)
+router.put('/product/star/:productId', checkAuth, productStar)
+
 router.post('/products', list)
 
 //rating route
-router.put('/product/star/:productId', checkAuth, productStar)
 
 
 

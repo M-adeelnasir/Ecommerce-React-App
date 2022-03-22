@@ -172,9 +172,9 @@ exports.getProductsCount = async (req, res) => {
 //Ratings
 exports.productStar = async (req, res) => {
     // 1- get the product
-    const product = await Product.findById(req.params.productId)
+    const product = await Product.findById(req.params.productId).exec()
     // 2- get the user who want to leave rating
-    const user = await User.findOne({ email: req.body.email })
+    const user = await User.findOne({ email: req.user.email }).exec()
 
     const { star } = req.body
     //who is updating
@@ -183,15 +183,16 @@ exports.productStar = async (req, res) => {
         (ele) => ele.postedBy.toString() === user._id.toString()
     )
 
+    console.log(existingRatingObject);
     //if user have not left ratings yet, then push it
     //if not rating existingRatingObject will return undefined
     if (existingRatingObject === undefined) {
         let ratingAdded = await Product.findByIdAndUpdate(product._id,
             {
-                $push: { ratings: { start, postedBy: user._id } }
+                $push: { ratings: { star, postedBy: user._id } }
             },
             { new: true }
-        ) //can also use req.params.productId
+        ).exec() //can also use req.params.productId
 
         console.log(ratingAdded);
         res.json({
@@ -202,15 +203,18 @@ exports.productStar = async (req, res) => {
     }
     //if the user already left the rating then update the rating
     else {
+        console.log("heelo");
         const updateRating = await Product.updateOne(
             {
-                ratings: { $elemMatch: existingRatingObject }
+                ratings: {
+                    $elemMatch: existingRatingObject
+                }
             },
             {
                 $set: { "ratings.$.star": star }
             },
             { new: true }
-        )
+        ).exec()
         console.log(updateRating);
         res.json({
             success: true,
