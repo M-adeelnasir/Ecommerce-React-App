@@ -1,16 +1,21 @@
 import React, { useState, useEffect } from 'react'
 import { getSingleProduct } from '../functions/getAllProducts'
 import SingleProduct from '../components/products/SingleProduct'
+
+
+
 const Product = ({ match }) => {
 
     const [product, setProduct] = useState({})
     const [loading, setLoading] = useState(false)
 
+
     const { slug } = match.params
 
     useEffect(() => {
         loadProduct()
-    }, [])
+    }, [slug])
+
 
     const loadProduct = () => {
         setLoading(true)
@@ -21,11 +26,14 @@ const Product = ({ match }) => {
             })
     }
 
+
+
+
     return (
         <>
             <div className="container-fluid">
                 <div className="row pt-4">
-                    <SingleProduct product={product} />
+                    <SingleProduct product={product} loadProduct={loadProduct} />
                 </div>
 
                 <div className="row p-5">

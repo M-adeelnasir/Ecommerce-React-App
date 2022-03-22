@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useHistory, useParams } from 'react-router-dom'
 import { productStar } from '../../functions/getAllProducts'
-
 import { useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import { Modal } from 'antd'
@@ -15,7 +14,7 @@ const { TabPane } = Tabs;
 
 
 
-const SingleProduct = ({ product }) => {
+const SingleProduct = ({ product, loadProduct }) => {
 
 
     const [modalVisible, setModalVisible] = useState(false)
@@ -50,16 +49,28 @@ const SingleProduct = ({ product }) => {
     const handelStarClick = (newRating, name) => {
         setStar(newRating);
         // console.log(newRating, name);
-        console.log(name, newRating, user.token);
+        // console.log(name, newRating, user.token);
         productStar(name, newRating, user.token)
             .then((res) => {
                 console.log(res.data);
+                loadProduct()
 
             }).catch(err => {
                 console.log(err);
             })
 
     }
+
+
+    //Show user existing rating on a product 
+    useEffect(() => {
+        if (product.ratings && user) {
+            let existingRatingObject = product.ratings.find(
+                (ele) => ele.postedBy.toString() === user._id.toString()
+            )
+            existingRatingObject && setStar(existingRatingObject.star)
+        }
+    }, [])
 
     return (
         <>
