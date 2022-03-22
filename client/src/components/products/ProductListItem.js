@@ -16,7 +16,7 @@ const ProductListItem = ({ product }) => {
 
                 {category && <li className="list-group-item d-flex justify-content-between align-items-center">
                     category{" "}
-                    <Link to={`/category/${category.slug}`} className="label label-defualt label-pill pull-xs-right">${category.name}</Link>
+                    <Link to={`/category/${category.slug}`} className="label label-defualt label-pill pull-xs-right"> {category.name}</Link>
                 </li>}
 
                 <li className="list-group-item d-flex justify-content-between align-items-center">
