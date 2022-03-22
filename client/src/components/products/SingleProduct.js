@@ -102,7 +102,10 @@ const SingleProduct = ({ product, loadProduct }) => {
                 <h1 className='bg-info p-3'>{title}</h1>
 
                 {/*Average Star Rating of a product */}
-                {product && product.ratings && product.ratings.length > 0 ? showAverage(product) : "No Ratings Yet"}
+                {product && product.ratings && product.ratings.length > 0 ? showAverage(product) : (
+                    <div className='text-center text-info pt-3 pb-3 '>No Ratings Yet</div>
+
+                )}
 
 
                 {/* Handel Modal and star Ratings */}
