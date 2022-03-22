@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useHistory, useParams } from 'react-router-dom'
 import { productStar } from '../../functions/getAllProducts'
+import { showAverage } from '../../functions/AverageRatings'
+
 import { useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import { Modal } from 'antd'
@@ -98,6 +100,10 @@ const SingleProduct = ({ product, loadProduct }) => {
 
             <div className="col-md-5">
                 <h1 className='bg-info p-3'>{title}</h1>
+
+                {/*Average Star Rating of a product */}
+                {product && product.ratings && product.ratings.length > 0 ? showAverage(product) : "No Ratings Yet"}
+
 
                 {/* Handel Modal and star Ratings */}
 
