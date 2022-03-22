@@ -2,6 +2,7 @@ import React from 'react'
 import Jumbotron from '../components/products/Jumbotron'
 import ProductsNewArrivals from '../components/home/ProductsNewArrivals'
 import BestSellers from '../components/home/BestSellers'
+import CategoryLists from '../components/category/CategoryLists'
 
 
 
@@ -24,6 +25,11 @@ const Home = () => {
                 Best Sellers
             </div>
             <BestSellers />
+
+            <div className="jumbotron bg-light text-center h3 p-3 mt-5 mb-5">
+                Categories
+            </div>
+            <CategoryLists />
         </>
     )
 }
