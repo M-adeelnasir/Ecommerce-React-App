@@ -142,3 +142,30 @@ exports.getSub = async (req, res) => {
         })
     }
 }
+
+
+
+//handleQuery search upon text
+
+const handelQuery = (req, res, query) => {
+    const products = await Product.find({ $text: { $search: query } })
+        .populate('category')
+        .populate('subs')
+        .populate('ratings')
+        .exec()
+    res.json({
+        success: true,
+        data: products
+    })
+}
+
+//Searches the products
+
+exports.searchFilters = async (req, res) => {
+    const { query } = req.body
+    //search base upon text
+    if (query) {
+        console.log("Query  :", query);
+        await handelQuery();
+    }
+}
