@@ -36,6 +36,10 @@ const Header = () => {
                     <i className="fa fa-home pr-1">
                     </i> <Link to='/'>Home</Link>
                 </Menu.Item>
+                <Menu.Item key="shop" >
+                    <i className="fa fa-shopping-basket pr-1">
+                    </i> <Link to='/shop'>Shop</Link>
+                </Menu.Item>
                 {user && <SubMenu key="SubMenu" icon={<SettingOutlined />} title={user.name ? <span>{user.name.split(' ')[0]}</span> : (user.email.split('@')[0])}>
 
                     {user && user.role == "subscriber" && <Menu.Item ><Link to='/user/history'> Dashboard</Link></Menu.Item>}
@@ -56,7 +60,7 @@ const Header = () => {
                     <i className="fa fa-sign-in pr-2 "></i>
                     <Link to='/login'>Login</Link>
                 </Menu.Item>}
-                <span className='float-right p-1'>
+                <span className=' p-1'>
                     <TextSearch />
                 </span>
             </Menu>
