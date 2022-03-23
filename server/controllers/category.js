@@ -1,6 +1,8 @@
 const Category = require('../models/categoriesSchema')
 const slugify = require('slugify')
 const Sub = require('../models/subCategorySchema')
+const Product = require('../models/productSchema')
+
 //@create Category
 
 exports.create = async (req, res) => {
@@ -44,10 +46,19 @@ exports.read = async (req, res) => {
                 data: {}
             })
         }
-        console.log(category);
+        // console.log(category);
+        //lets send the products retaled to this category
+        const products = await Product.find({ category })
+            .populate('category')
+            .populate('ratings')
+            .exec()
+
+
+
         res.status(200).json({
             success: true,
-            data: category
+            data: category,
+            products
         })
     } catch (err) {
         console.log(err);

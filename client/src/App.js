@@ -25,6 +25,9 @@ import AllProducts from './pages/admin/product/AllProducts';
 import UpdateProduct from './pages/admin/product/UpdateProduct';
 import Product from './pages/Product';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
+import CategoryHome from './pages/category/CategoryHome';
+
+
 const App = () => {
 
   const dispatch = useDispatch();
@@ -85,7 +88,7 @@ const App = () => {
         <AdminRoute exact path='/admin/product/update/:slug'><UpdateProduct /></AdminRoute>
 
         <Route exact path='/product/:slug' component={Product} />
-
+        <Route exact path='/category/:slug' component={CategoryHome} />
 
 
 
