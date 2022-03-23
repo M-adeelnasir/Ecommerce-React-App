@@ -203,7 +203,7 @@ exports.productStar = async (req, res) => {
     }
     //if the user already left the rating then update the rating
     else {
-        console.log("heelo");
+        // console.log("heelo");
         const updateRating = await Product.updateOne(
             {
                 ratings: {

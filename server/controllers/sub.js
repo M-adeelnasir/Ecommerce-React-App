@@ -1,5 +1,6 @@
 const Sub = require('../models/subCategorySchema')
 const slugify = require('slugify')
+const Product = require('../models/productSchema')
 
 //create
 exports.create = async (req, res) => {
@@ -36,11 +37,21 @@ exports.read = async (req, res) => {
                 success: flase,
                 data: {}
             })
+            return
         }
+
+        //get the product based upon subs categories
+        const product = await Product.find({ subs: sub })
+            .populate('category')
+            .exec()
+
+
         // console.log(category);
         res.status(200).json({
             success: true,
-            data: sub
+            data: sub,
+            product
+
         })
     } catch (err) {
         console.log(err);

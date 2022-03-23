@@ -26,6 +26,7 @@ import UpdateProduct from './pages/admin/product/UpdateProduct';
 import Product from './pages/Product';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import CategoryHome from './pages/category/CategoryHome';
+import SubHome from './pages/sub/SubHome';
 
 
 const App = () => {
@@ -89,6 +90,7 @@ const App = () => {
 
         <Route exact path='/product/:slug' component={Product} />
         <Route exact path='/category/:slug' component={CategoryHome} />
+        <Route exact path='/sub/:slug' component={SubHome} />
 
 
 
