@@ -147,7 +147,7 @@ exports.getSub = async (req, res) => {
 
 //handleQuery search upon text
 
-const handelQuery = (req, res, query) => {
+const handelQuery = async (req, res, query) => {
     const products = await Product.find({ $text: { $search: query } })
         .populate('category')
         .populate('subs')

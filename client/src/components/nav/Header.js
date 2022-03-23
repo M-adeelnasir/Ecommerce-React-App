@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { auth } from '../../firebase';
 import { useDispatch, useSelector } from 'react-redux';
+import TextSearch from '../search/TextSearch';
 import { useHistory } from 'react-router-dom'
 import { Menu } from 'antd';
 import { Link } from 'react-router-dom'
@@ -55,7 +56,9 @@ const Header = () => {
                     <i className="fa fa-sign-in pr-2 "></i>
                     <Link to='/login'>Login</Link>
                 </Menu.Item>}
-
+                <span className='float-right p-1'>
+                    <TextSearch />
+                </span>
             </Menu>
         </>
     )
