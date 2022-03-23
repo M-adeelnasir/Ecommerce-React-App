@@ -16,15 +16,39 @@ const CategoryHome = ({ match }) => {
         setLoading(true)
         getSingleCategory(slug)
             .then((res) => {
-                setLoading(false)
                 // console.log(JSON.stringify(res.data, null, 4));
                 setCategory(res.data.data);
+                setProducts(res.data.products)
+
+                setLoading(false)
             })
     }, [])
 
 
     return (
-        <div>{match.params.slug}</div>
+        <>
+            <div className="container-fluid">
+                <div className="row">
+                    <div className="col">
+                        {loading ?
+                            <h4 className='text-center pt-3 pb-3 h3 mt-3 mb-5 bg-light'>Loading...</h4>
+                            :
+                            <h4 className='text-center pt-3 pb-3 h3 mt-3 mb-5 bg-light'>
+
+                                {products.length} Products in "{category.name}" category
+                            </h4>}
+                    </div>
+                </div>
+                <div className="row">
+                    {products.map((product) =>
+                        <div className='col-md-4' key={product._id}>
+                            <ProductCard product={product} />
+                        </div>
+                    )}
+                </div>
+            </div>
+
+        </>
     )
 }
 
