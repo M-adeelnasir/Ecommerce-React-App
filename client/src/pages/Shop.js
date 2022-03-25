@@ -4,6 +4,7 @@ import { getAllProducts, getProductOnSearch } from '../functions/getAllProducts'
 import { getCategories } from '../functions/category'
 import { useSelector, useDispatch } from 'react-redux'
 import { Menu, Slider, Checkbox } from 'antd'
+import userEvent from '@testing-library/user-event'
 const { SubMenu } = Menu;
 
 
@@ -80,6 +81,8 @@ const Shop = () => {
         //     payload: { text: "" }
         // })
 
+        //to restore the categories section filter
+        setCategoriesIds([])
 
         setPrice(value)
         setTimeout(() => {
@@ -92,7 +95,13 @@ const Shop = () => {
     //handle category show filters
     const showCategories = () =>
         categories.map((category) => (<div key={category._id}>
-            <Checkbox onChange={handleCheck} className='pb-2 pl-4 pr-4' value={category._id} name="category">
+            <Checkbox
+                onChange={handleCheck}
+                className='pb-2 pl-4 pr-4'
+                value={category._id}
+                name="category"
+                checked={categoriesIds.includes(category._id)}
+            >
                 {category.name}
             </Checkbox>
             <br />
@@ -102,6 +111,8 @@ const Shop = () => {
     const handleCheck = (e) => {
         // console.log(e.target.value);
 
+        //to reset the price filter
+        setPrice([0, 0])
 
         //get the empty arry states to push the category id on check the box and remove from it on uncheck
 

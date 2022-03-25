@@ -298,10 +298,59 @@ const handleCategory = async (req, res, category) => {
 
 
 
+
+//search by stars
+const handleStarRating = (req, res, stars) => {
+    Product.aggregate([
+        {
+            $project: {
+                document: "$$ROOT",  // to access and get the each field in the Product schema
+                floorAverage: {
+                    $floor: { $avg: "$ratings.star" }
+                }
+
+            }
+
+        },
+
+        { $match: { floorAverage: stars } }
+    ])
+        .limit(6)
+        .exec((err, aggregate) => {
+            if (err) {
+                console.log(err);
+
+                return
+            }
+            Product.find({ _id: aggregate })
+                .populate('category')
+                .populate('subs')
+                .populate('ratings')
+                .exec((err, products) => {
+                    if (err) {
+                        console.log(err);
+                        res.status(400).json({
+                            success: false,
+                            data: {}
+                        })
+                    }
+                    res.json({
+                        success: true,
+                        data: products
+                    })
+                })
+
+
+        })
+}
+
+
+
+
 //Searches the products
 
 exports.searchFilters = async (req, res) => {
-    const { price, category } = req.body
+    const { price, category, stars } = req.body
 
 
     //search base on price 
@@ -316,4 +365,11 @@ exports.searchFilters = async (req, res) => {
         console.log("category===>", category);
         await handleCategory(req, res, category)
     }
+
+    //filter base on stars ratings
+    if (stars) {
+        console.log("stars===>", stars);
+        handleStarRating(req, res, stars)
+    }
+
 }
