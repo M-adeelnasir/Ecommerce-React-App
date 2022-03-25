@@ -250,7 +250,44 @@ exports.listRelatedProducts = async (req, res) => {
             data: err.message
         })
     }
+}
 
 
 
+
+//search for price
+const handelPrice = async (req, res, price) => {
+    try {
+        const products = await Product.find({
+            price: {
+                $gte: price[0],
+                $lte: price[1]
+            }
+        })
+        console.log(products);
+        res.json({
+            success: true,
+            data: products
+        })
+    } catch (err) {
+        res.status(400).json({
+            success: false,
+            data: {}
+        })
+    }
+}
+
+
+//Searches the products
+
+exports.searchFilters = async (req, res) => {
+    const { price } = req.body
+
+
+    //search base on price 
+    //eg [20,2000]
+    if (price !== undefined) {
+        console.log('price ===> ', price);
+        await handelPrice(req, res, price)
+    }
 }

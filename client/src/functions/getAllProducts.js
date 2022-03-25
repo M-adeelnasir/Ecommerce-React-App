@@ -75,3 +75,9 @@ export const productStar = async (productId, star, authToken) => {
 export const getRelatedProducts = async (productId) => {
     return await axios.get(`${process.env.REACT_APP_API_REQUEST}/product/related/${productId}`)
 }
+
+
+//text search
+export const getProductOnSearch = async (arg) => {
+    return await axios.post(`${process.env.REACT_APP_API_REQUEST}/products/search/filters`, arg)
+}
