@@ -278,10 +278,30 @@ const handelPrice = async (req, res, price) => {
 }
 
 
+//search by category
+
+const handleCategory = async (req, res, category) => {
+    try {
+        const products = await Product.find({ category })
+        res.json({
+            success: true,
+            data: products
+        })
+    } catch (err) {
+        console.log(err);
+        res.json({
+            success: false,
+            data: {}
+        })
+    }
+}
+
+
+
 //Searches the products
 
 exports.searchFilters = async (req, res) => {
-    const { price } = req.body
+    const { price, category } = req.body
 
 
     //search base on price 
@@ -289,5 +309,11 @@ exports.searchFilters = async (req, res) => {
     if (price !== undefined) {
         console.log('price ===> ', price);
         await handelPrice(req, res, price)
+    }
+
+    //filter By category
+    if (category) {
+        console.log("category===>", category);
+        await handleCategory(req, res, category)
     }
 }

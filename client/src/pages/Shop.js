@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import ProductCard from '../components/products/ProductCard'
 import { getAllProducts, getProductOnSearch } from '../functions/getAllProducts'
+import { getCategories } from '../functions/category'
 import { useSelector, useDispatch } from 'react-redux'
-import { Menu, Slider } from 'antd'
+import { Menu, Slider, Checkbox } from 'antd'
 const { SubMenu } = Menu;
 
 
@@ -12,9 +13,13 @@ const Shop = () => {
     const [price, setPrice] = useState([0, 0])
     const [ok, setOk] = useState(false)
 
+    const [categories, setCategories] = useState([])
+    const [categoriesIds, setCategoriesIds] = useState([])
 
 
     const dispatch = useDispatch()
+
+
 
     //load the deafult products on shop page
     const loadProduct = () => {
@@ -27,8 +32,19 @@ const Shop = () => {
             })
     }
 
+    //load all categories
+    const loadCategories = () => {
+        getCategories()
+            .then((res) => {
+                // console.log(res.data.data);
+                setCategories(res.data.data)
+            })
+    }
+
+
     useEffect(() => {
         loadProduct()
+        loadCategories()
     }, [])
 
 
@@ -40,7 +56,7 @@ const Shop = () => {
         //delay the request send to server
         getProductOnSearch(arg)
             .then((res) => {
-                console.log(res.data.data);
+                // console.log(res.data.data);
                 setProducts(res.data.data)
             })
         console.log(products);
@@ -51,9 +67,12 @@ const Shop = () => {
 
     //Price based filteration 
     useEffect(() => {
-        console.log("Request By Pricing");
+        // console.log("Request By Pricing");
         fetchProducts({ price: price })
     }, [ok])
+
+
+
 
     const handleChangeSlider = (value) => {
         // dispatch({
@@ -70,6 +89,42 @@ const Shop = () => {
 
 
 
+    //handle category show filters
+    const showCategories = () =>
+        categories.map((category) => (<div key={category._id}>
+            <Checkbox onChange={handleCheck} className='pb-2 pl-4 pr-4' value={category._id} name="category">
+                {category.name}
+            </Checkbox>
+            <br />
+        </div>))
+
+    //handleCheck
+    const handleCheck = (e) => {
+        // console.log(e.target.value);
+
+
+        //get the empty arry states to push the category id on check the box and remove from it on uncheck
+
+        const iniTheState = [...categoriesIds]
+        const justChecked = e.target.value;
+        const foundedInState = iniTheState.indexOf(justChecked)  //return index if found or -1 not avalilable
+
+        if (foundedInState === -1) {
+            iniTheState.push(justChecked)
+        }
+        else {
+            iniTheState.splice(foundedInState, 1)
+        }
+
+        setCategoriesIds(iniTheState)
+        // console.log(iniTheState)
+
+        fetchProducts({ category: iniTheState })
+    }
+
+
+
+
     return (
         <>
             <div className="container-fluid">
@@ -77,7 +132,12 @@ const Shop = () => {
                     <div className="col-md-3 mt-2">
                         <h4> Search and Filter</h4>
                         <hr />
-                        <Menu defaultValue={["1", "2", "3"]} mode='inline'>
+
+
+                        {/* Filteration the products */}
+                        <Menu defaultOpenKeys={["1", "2", "3"]} mode='inline'>
+
+                            {/* Filter By Price */}
                             <SubMenu
                                 key="1"
                                 title="$ Price"
@@ -93,6 +153,21 @@ const Shop = () => {
                                     >
 
                                     </Slider>
+                                </div>
+
+                            </SubMenu>
+
+
+                            {/* Filter By categories */}
+                            <SubMenu
+                                key="2"
+                                title="Categories"
+                            >
+
+                                <div style={{ marginTop: "-10px" }}>
+                                    {/* {JSON.stringify(categories)} */}
+
+                                    {showCategories()}
                                 </div>
 
                             </SubMenu>
