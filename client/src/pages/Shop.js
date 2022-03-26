@@ -4,7 +4,7 @@ import { getAllProducts, getProductOnSearch } from '../functions/getAllProducts'
 import { getCategories } from '../functions/category'
 import { useSelector, useDispatch } from 'react-redux'
 import { Menu, Slider, Checkbox } from 'antd'
-import userEvent from '@testing-library/user-event'
+import Stars from '../components/stars/Stars'
 const { SubMenu } = Menu;
 
 
@@ -16,6 +16,8 @@ const Shop = () => {
 
     const [categories, setCategories] = useState([])
     const [categoriesIds, setCategoriesIds] = useState([])
+
+    const [star, setStar] = useState("")
 
 
     const dispatch = useDispatch()
@@ -83,6 +85,7 @@ const Shop = () => {
 
         //to restore the categories section filter
         setCategoriesIds([])
+        setStar("")
 
         setPrice(value)
         setTimeout(() => {
@@ -113,6 +116,7 @@ const Shop = () => {
 
         //to reset the price filter
         setPrice([0, 0])
+        setStar('')
 
         //get the empty arry states to push the category id on check the box and remove from it on uncheck
 
@@ -134,6 +138,18 @@ const Shop = () => {
     }
 
 
+
+
+    //stars Rating request Handler
+
+    const handelStarClick = (num) => {
+        console.log(num);
+        setCategoriesIds([])    //reset teh catergories
+        setPrice([0, 0])    //reset the price
+        setStar(num)
+        fetchProducts({ stars: num })
+
+    }
 
 
     return (
@@ -179,6 +195,28 @@ const Shop = () => {
                                     {/* {JSON.stringify(categories)} */}
 
                                     {showCategories()}
+                                </div>
+
+                            </SubMenu>
+
+
+
+                            {/* Star based Products */}
+                            <SubMenu
+                                key="3"
+                                title="Ratings"
+                            >
+
+                                <div style={{ marginTop: "-10px" }}>
+                                    {/* {showStar()} */}
+
+                                    <div className='pr-4 pl-4 pb-2'>
+                                        <Stars starClick={handelStarClick} numberOfStars={5} />
+                                        <Stars starClick={handelStarClick} numberOfStars={4} />
+                                        <Stars starClick={handelStarClick} numberOfStars={3} />
+                                        <Stars starClick={handelStarClick} numberOfStars={2} />
+                                        <Stars starClick={handelStarClick} numberOfStars={1} />
+                                    </div>
                                 </div>
 
                             </SubMenu>
