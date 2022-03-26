@@ -1,5 +1,5 @@
-import React from 'react'
-import { Card, Skeleton } from 'antd';
+import React, { useState } from 'react'
+import { Card, Tooltip } from 'antd';
 import { Link } from 'react-router-dom';
 import _ from 'lodash'
 import { ShoppingCartOutlined, EyeOutlined } from '@ant-design/icons';
@@ -10,6 +10,7 @@ const { Meta } = Card;
 
 const ProductCard = ({ product }) => {
 
+    const [toolTip, setToolTip] = useState("Add To Cart")
 
 
     //hanlde Product Card
@@ -29,6 +30,8 @@ const ProductCard = ({ product }) => {
             let unique = _.uniqWith(cart, _.isEqual) // will remove the dublicates from the arry
 
             localStorage.setItem("cart", JSON.stringify(unique))
+
+            setToolTip("Added")
 
         }
     }
@@ -59,9 +62,11 @@ const ProductCard = ({ product }) => {
                     <Link to={`/product/${slug}`}>
                         <EyeOutlined className='text-info' /><br /> <p className='text-info'>View Product</p>
                     </Link>,
-                    <a onClick={handleCart}>
-                        <ShoppingCartOutlined className='text-danger' /> <br /><p className='text-danger'>Add to Cart</p>
-                    </a>
+                    <Tooltip title={toolTip}>
+                        <a onClick={handleCart}>
+                            <ShoppingCartOutlined className='text-danger' /> <br /><p className='text-danger'>Add to Cart</p>
+                        </a>
+                    </Tooltip>
                 ]}
             >
                 <Meta title={`${title} -  $${price}`} description={`${description && description.substring(0, 50)}...`} />
