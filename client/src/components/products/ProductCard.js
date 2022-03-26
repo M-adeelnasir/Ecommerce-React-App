@@ -1,6 +1,7 @@
 import React from 'react'
 import { Card, Skeleton } from 'antd';
 import { Link } from 'react-router-dom';
+import _ from 'lodash'
 import { ShoppingCartOutlined, EyeOutlined } from '@ant-design/icons';
 // import { Skeleton } from 'antd';
 import { showAverage } from '../../functions/AverageRatings';
@@ -8,6 +9,34 @@ import { showAverage } from '../../functions/AverageRatings';
 const { Meta } = Card;
 
 const ProductCard = ({ product }) => {
+
+
+
+    //hanlde Product Card
+    const handleCart = () => {
+        let cart = []
+
+
+        if (typeof window !== undefined) { //if we have window
+
+            if (localStorage.getItem("cart")) {   //if we have already a product in cart
+                cart = JSON.parse(localStorage.getItem("cart")) //parse into json object
+            }
+            cart.push({
+                ...product,   // we spreate each product to ad a more property of count 
+                count: 1
+            })
+            let unique = _.uniqWith(cart, _.isEqual) // will remove the dublicates from the arry
+
+            localStorage.setItem("cart", JSON.stringify(unique))
+
+        }
+    }
+
+
+
+
+
 
     const { images, title, description, slug, price } = product
     return (
@@ -30,7 +59,10 @@ const ProductCard = ({ product }) => {
                     <Link to={`/product/${slug}`}>
                         <EyeOutlined className='text-info' /><br /> <p className='text-info'>View Product</p>
                     </Link>,
-                    <><ShoppingCartOutlined className='text-danger' /> <br /><p className='text-danger'>Add to Cart</p></>]}
+                    <a onClick={handleCart}>
+                        <ShoppingCartOutlined className='text-danger' /> <br /><p className='text-danger'>Add to Cart</p>
+                    </a>
+                ]}
             >
                 <Meta title={`${title} -  $${price}`} description={`${description && description.substring(0, 50)}...`} />
 
