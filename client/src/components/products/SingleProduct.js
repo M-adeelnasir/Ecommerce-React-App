@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { Link, useHistory, useParams } from 'react-router-dom'
 import { productStar } from '../../functions/getAllProducts'
 import { showAverage } from '../../functions/AverageRatings'
-
-import { useSelector } from 'react-redux'
+import _ from 'lodash'
+import { useSelector, useDispatch } from 'react-redux'
 import { toast } from 'react-toastify'
 import { Modal } from 'antd'
 import { StarOutlined } from '@ant-design/icons'
@@ -11,7 +11,8 @@ import StarRatings from 'react-star-ratings';
 import { HeartOutlined, ShoppingCartOutlined } from '@ant-design/icons'
 import ProductListItem from './ProductListItem';
 import { Carousel } from 'react-responsive-carousel';
-import { Card, Tabs } from 'antd'
+import { Card, Tabs, Tooltip } from 'antd'
+
 const { TabPane } = Tabs;
 
 
@@ -22,13 +23,14 @@ const SingleProduct = ({ product, loadProduct }) => {
     const [modalVisible, setModalVisible] = useState(false)
     const [star, setStar] = useState(0)
     const { user } = useSelector((state) => ({ ...state }));
+    const [toolTip, setToolTip] = useState("Add To Cart")
 
     const { images, title, description, _id } = product
 
     const history = useHistory();
     const { slug } = useParams()
 
-
+    const dispatch = useDispatch()
 
     //Handel modal if user is logged in he can commit rating otherwise he has to loading
     const handelModal = () => {
@@ -46,6 +48,7 @@ const SingleProduct = ({ product, loadProduct }) => {
         }
 
     }
+
 
 
     const handelStarClick = (newRating, name) => {
@@ -73,6 +76,35 @@ const SingleProduct = ({ product, loadProduct }) => {
             existingRatingObject && setStar(existingRatingObject.star)
         }
     }, [])
+
+
+
+    //Add to cart
+    const handleCart = () => {
+        let cart = []
+        if (typeof window !== undefined) { //if we have window
+
+            if (localStorage.getItem("cart")) {   //if we have already a product in cart
+                cart = JSON.parse(localStorage.getItem("cart")) //parse into json object
+            }
+            cart.push({
+                ...product,   // we spreate each product to ad a more property of count 
+                count: 1
+            })
+            let unique = _.uniqWith(cart, _.isEqual) // will remove the dublicates from the arry
+
+            localStorage.setItem("cart", JSON.stringify(unique))
+
+            setToolTip("Added")
+
+            //dispatch to redux store
+            dispatch({
+                type: "ADD_TO_CART",
+                payload: cart
+            })
+        }
+
+    }
 
     return (
         <>
@@ -112,9 +144,12 @@ const SingleProduct = ({ product, loadProduct }) => {
 
                 <Card
                     actions={[
-                        <>
-                            <ShoppingCartOutlined className='text-success' /> <br /> Add to Cart
-                        </>,
+                        <Tooltip title={toolTip}>
+                            <a onClick={handleCart}>
+                                <ShoppingCartOutlined className='text-success' /> <br /> Add to Cart
+                            </a>
+                        </Tooltip>
+                        ,
                         <Link to='/'>
                             <HeartOutlined className='text-info' />
                             <br />

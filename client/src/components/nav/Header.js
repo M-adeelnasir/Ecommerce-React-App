@@ -3,7 +3,7 @@ import { auth } from '../../firebase';
 import { useDispatch, useSelector } from 'react-redux';
 import TextSearch from '../search/TextSearch';
 import { useHistory } from 'react-router-dom'
-import { Menu } from 'antd';
+import { Menu, Badge } from 'antd';
 import { Link } from 'react-router-dom'
 import { SettingOutlined } from '@ant-design/icons';
 const { SubMenu } = Menu;
@@ -13,7 +13,7 @@ const Header = () => {
     const [current, setCurrent] = useState('home')
     const dispatch = useDispatch();
     const history = useHistory();
-    const { user } = useSelector((state) => ({ ...state }))
+    const { user, cart } = useSelector((state) => ({ ...state }))
     const handleClick = (e) => {
         // console.log(e.key);
         setCurrent(e.key)
@@ -36,6 +36,17 @@ const Header = () => {
                     <i className="fa fa-home pr-1">
                     </i> <Link to='/'>Home</Link>
                 </Menu.Item>
+
+                <Menu.Item key="cart" >
+                    <i className="fa fa-cart-arrow-down pr-1">
+                    </i>
+
+                    <Badge count={cart.length} offset={[9, 0]}>
+                        <Link to='/cart'>Cart</Link>
+                    </Badge>
+                </Menu.Item>
+
+
                 <Menu.Item key="shop" >
                     <i className="fa fa-shopping-basket pr-1">
                     </i> <Link to='/shop'>Shop</Link>
@@ -60,9 +71,9 @@ const Header = () => {
                     <i className="fa fa-sign-in pr-2 "></i>
                     <Link to='/login'>Login</Link>
                 </Menu.Item>}
-                <span className=' p-1'>
+                {/* <span className=' p-1'>
                     <TextSearch />
-                </span>
+                </span> */}
             </Menu>
         </>
     )
