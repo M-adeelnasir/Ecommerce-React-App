@@ -346,11 +346,33 @@ const handleStarRating = (req, res, stars) => {
 
 
 
+//search sub category
+const handleSub = async (req, res, sub) => {
+    try {
+        const products = await Product.find({ subs: sub })
+            .populate('category')
+            .populate('subs')
+            .populate('ratings')
+            .exec()
+        res.json({
+            success: true,
+            data: products
+        })
+    } catch (err) {
+        console.log(err);
+        res.status(404).json({
+            success: false,
+            data: {}
+        })
+    }
+}
+
+
 
 //Searches the products
 
 exports.searchFilters = async (req, res) => {
-    const { price, category, stars } = req.body
+    const { price, category, stars, sub } = req.body
 
 
     //search base on price 
@@ -370,6 +392,12 @@ exports.searchFilters = async (req, res) => {
     if (stars) {
         console.log("stars===>", stars);
         handleStarRating(req, res, stars)
+    }
+
+    //filter base on sub category of products
+    if (sub) {
+        console.log("sub===>", sub);
+        handleSub(req, res, sub)
     }
 
 }
