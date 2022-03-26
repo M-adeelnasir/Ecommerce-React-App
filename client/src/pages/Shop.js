@@ -3,6 +3,7 @@ import ProductCard from '../components/products/ProductCard'
 import { getAllProducts, getProductOnSearch } from '../functions/getAllProducts'
 import { getCategories } from '../functions/category'
 import { useSelector, useDispatch } from 'react-redux'
+import { getSubs } from '../functions/sub'
 import { Menu, Slider, Checkbox } from 'antd'
 import Stars from '../components/stars/Stars'
 const { SubMenu } = Menu;
@@ -19,6 +20,8 @@ const Shop = () => {
 
     const [star, setStar] = useState("")
 
+    const [subs, setSubs] = useState([])
+    const [sub, setSub] = useState('')
 
     const dispatch = useDispatch()
 
@@ -45,9 +48,21 @@ const Shop = () => {
     }
 
 
+    //load all subs
+    const loadSubs = () => {
+        getSubs()
+            .then((res) => {
+                setSubs(res.data.data)
+                // console.log(res.data.data);
+            }).catch(err => console.log(err))
+        // console.log(subs);
+    }
+
+
     useEffect(() => {
         loadProduct()
         loadCategories()
+        loadSubs()
     }, [])
 
 
@@ -86,7 +101,7 @@ const Shop = () => {
         //to restore the categories section filter
         setCategoriesIds([])
         setStar("")
-
+        setSub('')
         setPrice(value)
         setTimeout(() => {
             setOk(!ok)
@@ -147,9 +162,29 @@ const Shop = () => {
         setCategoriesIds([])    //reset teh catergories
         setPrice([0, 0])    //reset the price
         setStar(num)
+        setSub('')
         fetchProducts({ stars: num })
 
     }
+
+
+
+    //handle Sub category filter
+
+    // const showSubs = () => 
+
+    const handleSubRequest = (sub) => {
+        // console.log(s);
+        setSub(sub)
+        setPrice([0, 0])
+        setCategoriesIds([])
+        setStar("")
+        fetchProducts({ sub: sub })
+
+
+    }
+
+
 
 
     return (
@@ -162,7 +197,7 @@ const Shop = () => {
 
 
                         {/* Filteration the products */}
-                        <Menu defaultOpenKeys={["1", "2", "3"]} mode='inline'>
+                        <Menu defaultOpenKeys={["1", "2", "3", "4"]} mode='inline'>
 
                             {/* Filter By Price */}
                             <SubMenu
@@ -217,6 +252,32 @@ const Shop = () => {
                                         <Stars starClick={handelStarClick} numberOfStars={2} />
                                         <Stars starClick={handelStarClick} numberOfStars={1} />
                                     </div>
+                                </div>
+
+                            </SubMenu>
+
+
+                            {/* Filter By sub categories */}
+                            <SubMenu
+                                key="4"
+                                title=" Sub Categories"
+                            >
+
+                                <div style={{ marginTop: "-10px" }}>
+
+                                    {/* {
+                                        subs.map((sub) => {
+                                            <div onClick={() => handleSubRequest(sub)} className='p-1 m-1 badge badge-secondary'> {sub.name}</div>
+                                        })
+                                    } */}
+
+
+                                    {subs.map((s) => <div key={s._id} onClick={() => handleSubRequest(s)} className='p-1 m-1 badge badge-secondary' style={{ cursor: "pointer" }}>
+                                        {s.name}
+                                    </div>
+                                    )}
+
+
                                 </div>
 
                             </SubMenu>
