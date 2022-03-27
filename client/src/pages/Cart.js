@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
+import TableItemsCard from '../components/products/TableItemsCard'
 
 const Cart = () => {
 
@@ -18,18 +19,44 @@ const Cart = () => {
 
     }
 
+    //product Table
+
+    const productTable = () =>
+        <>
+            <table className='table table-bordered'>
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col">Image</th>
+                        <th scope="col">Title</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Brand</th>
+                        <th scope="col">Color</th>
+                        <th scope="col">Count</th>
+                        <th scope="col">Shipping</th>
+                        <th scope="col">Remove</th>
+                    </tr>
+                </thead>
+
+                {cart.map((p) => (
+                    <TableItemsCard key={p._id} p={p} />
+                ))}
+            </table>
+        </>
+
+
+
     return (
         <>
             <div className="container-fluid pt-2">
                 <div className="row p-1">
-                    <h4>Cart / {cart.length}</h4>
+                    <h4 className='pr-2 h2'>Cart / {cart.length}</h4>
                 </div>
                 <div className="row">
                     <div className="col-md-8">
                         {!cart.length ?
-                            <p>No products in Cart. <Link to='/shop'>Shop Now</Link></p>
+                            (<p>No products in Cart. <Link to='/shop'>Shop Now</Link></p>)
                             :
-                            "Show Cart Item"
+                            (productTable())
                         }
                     </div>
                     <div className="col-md-4">
