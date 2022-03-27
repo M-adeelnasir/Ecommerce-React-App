@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { Switch, Route } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify';
 import Header from './components/nav/Header'
+import SideDrawer from './components/drawer/SideDrawer';
 import Home from './pages/Home'
 import Register from './pages/auth/Register'
 import Login from './pages/auth/Login'
@@ -71,6 +72,7 @@ const App = () => {
   return (
     <>
       <Header />
+      <SideDrawer />
       <ToastContainer />
       <Switch>
         <Route exact path='/' component={Home} />
