@@ -2,6 +2,8 @@ import React from 'react'
 import ModalImage from "react-modal-image";
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify'
+import { CloseCircleOutlined, CheckCircleOutlined, CloseOutlined } from '@ant-design/icons';
+import { type } from '@testing-library/user-event/dist/type';
 
 
 const TableItemsCard = ({ p }) => {
@@ -72,7 +74,28 @@ const TableItemsCard = ({ p }) => {
     }
 
 
+    const handleProductRemove = () => {
+        console.log(p._id, "removed");
 
+        let cart = []
+        if (typeof window !== undefined) {
+            if (localStorage.getItem("cart")) {
+                cart = JSON.parse(localStorage.getItem("cart"))
+            }
+            cart.map((product, i) => {
+                if (product._id === p._id) {
+                    cart.splice(i, 1)
+                }
+            })
+
+            localStorage.setItem("cart", JSON.stringify(cart))
+
+            dispatch({
+                type: "ADD_TO_CART",
+                payload: cart,
+            })
+        }
+    }
 
     return (
         <tbody>
@@ -98,11 +121,15 @@ const TableItemsCard = ({ p }) => {
 
                     </select>
                 </td>
-                <td className='text-center '>
+                <td className=' '>
                     <input type="number" className='form-control' value={p.count} onChange={handleQuantityChange} />
                 </td>
-                <td>Shipping Icon</td>
-                <td>Rmove</td>
+                <td className='text-center'>
+                    {p.shipping === "Yes" ? <CheckCircleOutlined className='text-success' /> : <CloseCircleOutlined className='text-danger ' />}
+                </td>
+                <td className='text-center'>
+                    {<CloseOutlined className='text-danger pointer' onClick={handleProductRemove} />}
+                </td>
             </tr>
         </tbody>
     )
