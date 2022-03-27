@@ -24,7 +24,7 @@ const Cart = () => {
     const productTable = () =>
         <>
             <table className='table table-bordered'>
-                <thead class="thead-light">
+                <thead className="thead-light">
                     <tr>
                         <th scope="col">Image</th>
                         <th scope="col">Title</th>
@@ -73,7 +73,7 @@ const Cart = () => {
                         <hr />
                         {user ? <button
                             onClick={saveOrderToDb}
-                            disabled={!cart.length}
+                            // disabled={!cart.length}
                             className='btn btn-sm btn-primary mt-2'
                         >
                             Proceed To Checkout
