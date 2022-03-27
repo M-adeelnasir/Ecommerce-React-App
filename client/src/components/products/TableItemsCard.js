@@ -1,6 +1,7 @@
 import React from 'react'
 import ModalImage from "react-modal-image";
 import { useDispatch } from 'react-redux';
+import { toast } from 'react-toastify'
 
 
 const TableItemsCard = ({ p }) => {
@@ -13,9 +14,10 @@ const TableItemsCard = ({ p }) => {
 
     //to update the color in local storage
     const handleColorChange = (e) => {
-        console.log("Now the Color ==>", e);
+        // console.log("Now the Color ==>", e);
+
         let cart = []
-        if (typeof window !== undefined) {
+        if (typeof window !== "undefined") {
             if (localStorage.getItem("cart")) {
                 cart = JSON.parse(localStorage.getItem("cart"))
             }
@@ -31,6 +33,44 @@ const TableItemsCard = ({ p }) => {
             })
         }
     }
+
+
+    //handle quantitiy change
+    const handleQuantityChange = e => {
+        // console.log("counts of products ==>", e);
+
+        //prevent user to to go minus value
+        let qyt = e.target.value < 1 ? 1 : e.target.value;
+
+        // console.log(p.quantity);
+        // prevent the user to not select the product more than its quantity available in stoke
+        if (qyt > p.quantity) {
+            toast.error(`This Product has ${p.quantity} in stoke`)
+            return
+        }
+
+        let cart = []
+        if (typeof window !== undefined) {
+            if (localStorage.getItem("cart")) {
+                cart = JSON.parse(localStorage.getItem("cart"))
+            }
+
+            cart.map((product, i) => {
+                if (product._id === p._id) {
+                    cart[i].count = qyt
+                }
+            })
+
+            localStorage.setItem("cart", JSON.stringify(cart))
+
+            dispatch({
+                type: "ADD_TO_CART",
+                payload: cart,
+            })
+
+        }
+    }
+
 
 
 
@@ -58,7 +98,9 @@ const TableItemsCard = ({ p }) => {
 
                     </select>
                 </td>
-                <td>{p.count}</td>
+                <td className='text-center '>
+                    <input type="number" className='form-control' value={p.count} onChange={handleQuantityChange} />
+                </td>
                 <td>Shipping Icon</td>
                 <td>Rmove</td>
             </tr>
