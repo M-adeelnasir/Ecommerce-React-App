@@ -1,14 +1,20 @@
 import React, { useState, useEffect } from 'react'
 import { getCart } from './functions/cart'
 import { useSelector, useDispatch } from 'react-redux'
-import { removeCart } from './functions/cart'
+import { removeCart, userAddress } from './functions/cart'
 import { toast } from 'react-toastify'
+import ReactQuill from 'react-quill'
+import 'react-quill/dist/quill.snow.css';
 
 
 const CheckOutPage = () => {
 
     const [products, setProducts] = useState([])
     const [total, setTotal] = useState(0)
+    const [address, setAddress] = useState('')
+
+    //just to confirm
+    const [addressSaved, setAddressSaved] = useState(false)
 
     const { user } = useSelector((state) => ({ ...state }))
     const dispatch = useDispatch()
@@ -53,8 +59,19 @@ const CheckOutPage = () => {
 
 
 
-    const handleCheckOut = () => {
+    const handleAddress = () => {
+        // console.log("address =>", address);
+        userAddress(user.token, address)
+            .then((res) => {
+                console.log(res);
+                console.log(res.data.data);
+                //just to make confirm that addres is saved in db
+                if (res.data.success) {
+                    setAddressSaved(true);
+                    toast.success("Address Saved")
+                }
 
+            }).catch(err => console.log(err))
     }
 
 
@@ -64,8 +81,8 @@ const CheckOutPage = () => {
                 <h4>Delivery Address</h4>
                 <br />
                 <br />
-                textArea
-                <button className='btn btn-primary mt-2' onClick={handleCheckOut}>Save</button>
+                <ReactQuill theme='snow' value={address} onChange={setAddress} />
+                <button className='btn btn-primary mt-2' onClick={handleAddress}>Save</button>
                 <hr />
                 <h4>Got Coupon?</h4>
                 <br />
@@ -87,10 +104,10 @@ const CheckOutPage = () => {
                 <p>Cart Total :${total}</p>
                 <div className="row">
                     <div className="col-md-6">
-                        <button className='btn btn-primary '>Place Order</button>
+                        <button disabled={!addressSaved || !products.length} className='btn btn-primary '>Place Order</button>
                     </div>
                     <div className="col-md-6">
-                        <button onClick={handleRemoveCart} className='btn btn-primary '>Remove Cart</button>
+                        <button disabled={!products.length} onClick={handleRemoveCart} className='btn btn-primary '>Remove Cart</button>
 
                     </div>
                 </div>

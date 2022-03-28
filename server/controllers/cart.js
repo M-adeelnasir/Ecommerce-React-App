@@ -107,3 +107,14 @@ exports.removeCart = async (req, res) => {
         })
     }
 }
+
+
+// send address to backend
+exports.sendAddress = async (req, res) => {
+    const userAddress = await User.findOneAndUpdate({ email: req.user.email }, { address: req.body.address }).exec()
+
+    res.json({
+        success: true,
+        data: userAddress
+    })
+}

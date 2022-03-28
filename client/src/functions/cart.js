@@ -32,3 +32,16 @@ export const removeCart = async (authToken) => {
         }
     )
 }
+
+
+//post the user Address in cart page
+export const userAddress = async (authToken, address) => {
+    return await axios.patch(`${process.env.REACT_APP_API_REQUEST}/user/cart`,
+        { address },
+        {
+            headers: {
+                authToken
+            }
+        }
+    )
+}

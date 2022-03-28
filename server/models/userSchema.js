@@ -15,9 +15,8 @@ const userSchema = new mongoose.Schema({
         type: Array,
         default: []
     },
-    address: {
-        type: String
-    },
+    address: String
+    ,
     picture: String
 
 }, { timestamps: true })
