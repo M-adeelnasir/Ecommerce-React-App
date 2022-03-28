@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { getCart } from './functions/cart'
 import { useSelector, useDispatch } from 'react-redux'
+import { removeCart } from './functions/cart'
+import { toast } from 'react-toastify'
 
 
 const CheckOutPage = () => {
@@ -22,6 +24,34 @@ const CheckOutPage = () => {
 
             }).catch(err => console.log(err))
     }, [])
+
+    const handleRemoveCart = () => {
+
+
+        //remove from local storage
+        if (typeof window !== "undefined") {
+            localStorage.removeItem("cart")
+        }
+
+        //remove from redux
+        dispatch({
+            type: "ADD_TO_CART",
+            payload: []
+        })
+
+        //remove from database
+        removeCart(user.token)
+            .then((res) => {
+                console.log(res);
+                setProducts([])
+                setTotal(0)
+                toast.success("Cart is Empty, Countinue Shopping")
+            }).catch(err => console.log(err))
+
+
+    }
+
+
 
     const handleCheckOut = () => {
 
@@ -45,17 +75,22 @@ const CheckOutPage = () => {
             <div className="col-md-6">
                 <h4>Order Summary</h4>
                 <hr />
-                <p>Products</p>
+                <p>Products {products.length}</p>
                 <hr />
-                <p>List of Products</p>
+                {products.map((p, i) => (
+                    <div key={i}>
+                        <p>{p.product.title} ({p.color}) X {p.count} = ${p.product.price}</p>
+                    </div>
+
+                ))}
                 <hr />
-                <p>Cart Total :$</p>
+                <p>Cart Total :${total}</p>
                 <div className="row">
                     <div className="col-md-6">
                         <button className='btn btn-primary '>Place Order</button>
                     </div>
                     <div className="col-md-6">
-                        <button className='btn btn-primary '>Place Order</button>
+                        <button onClick={handleRemoveCart} className='btn btn-primary '>Remove Cart</button>
 
                     </div>
                 </div>

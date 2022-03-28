@@ -88,3 +88,22 @@ exports.getCart = async (req, res) => {
     })
 
 }
+
+
+//remove the cart
+exports.removeCart = async (req, res) => {
+    try {
+        const user = await User.findOne({ email: req.user.email }).exec()
+
+        //remove the cart
+        const cart = await Cart.findOneAndRemove({ orderBy: user._id }).exec()
+        res.json({
+            success: true,
+            data: {}
+        })
+    } catch (err) {
+        res.json({
+            success: false
+        })
+    }
+}
