@@ -20,7 +20,7 @@ const Cart = ({ history }) => {
         alert("saved into db")
         userCart(cart, user.token)
             .then((res) => {
-                if (res.data.data.ok) {
+                if (res.data.data.success) {
                     history.push('/checkout')
                 }
             }).catch((err) => console.log(err))
