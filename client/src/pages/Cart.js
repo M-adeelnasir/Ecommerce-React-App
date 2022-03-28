@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import TableItemsCard from '../components/products/TableItemsCard'
+import { userCart } from '../functions/cart'
 
 const Cart = ({ history }) => {
 
@@ -17,7 +18,12 @@ const Cart = ({ history }) => {
 
     const saveOrderToDb = () => {
         alert("saved into db")
-        history.push('/checkout')
+        userCart(cart, user.token)
+            .then((res) => {
+                if (res.data.data.ok) {
+                    history.push('/checkout')
+                }
+            }).catch((err) => console.log(err))
     }
 
     //product Table
