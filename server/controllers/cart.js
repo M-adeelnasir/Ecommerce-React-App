@@ -57,13 +57,34 @@ exports.userCart = async (req, res) => {
 
     }).save()
 
-    // console.log("Cart ====>",newCart);
+    console.log("Cart ====>", newCart);
 
-    Print("Abdullah's error")
+    // Print("Abdullah's error")
 
     res.json({
         success: true,
         data: newCart
+    })
+
+}
+
+
+
+//get the cart
+
+exports.getCart = async (req, res) => {
+
+    //get ther user
+    const user = await User.findOne({ email: req.user.email }).exec()
+
+    let cart = await Cart.findOne({ orderBy: user._id })
+        .populate('products.product', "_id title price cartTotalAfterDiscount cartTotal")
+        .exec()
+
+    console.log("Cart get from server ==> ", cart);
+    res.json({
+        success: true,
+        data: cart
     })
 
 }

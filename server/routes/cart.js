@@ -5,8 +5,9 @@ const router = express.Router();
 const { checkAuth } = require('../midlewares/auth')
 //controller
 
-const { userCart } = require('../controllers/cart')
+const { userCart, getCart } = require('../controllers/cart')
 
 router.post('/user/cart', checkAuth, userCart)
+router.get('/user/cart', checkAuth, getCart)
 
 module.exports = router

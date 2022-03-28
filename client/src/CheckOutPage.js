@@ -1,6 +1,27 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
+import { getCart } from './functions/cart'
+import { useSelector, useDispatch } from 'react-redux'
+
 
 const CheckOutPage = () => {
+
+    const [products, setProducts] = useState([])
+    const [total, setTotal] = useState(0)
+
+    const { user } = useSelector((state) => ({ ...state }))
+    const dispatch = useDispatch()
+
+
+    useEffect(() => {
+        getCart(user.token)
+            .then((res) => {
+                // console.log(res.data.data);
+
+                setProducts(res.data.data.products)
+                setTotal(res.data.data.cartTotal)
+
+            }).catch(err => console.log(err))
+    }, [])
 
     const handleCheckOut = () => {
 
