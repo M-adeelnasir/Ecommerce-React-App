@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import TableItemsCard from '../components/products/TableItemsCard'
 
-const Cart = () => {
+const Cart = ({ history }) => {
 
     const { user, cart } = useSelector((state) => ({ ...state }))
     const dispatch = useDispatch()
@@ -16,7 +16,8 @@ const Cart = () => {
     }
 
     const saveOrderToDb = () => {
-
+        alert("saved into db")
+        history.push('/checkout')
     }
 
     //product Table

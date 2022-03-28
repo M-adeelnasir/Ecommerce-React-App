@@ -100,7 +100,7 @@ const SingleProduct = ({ product, loadProduct }) => {
             //dispatch to redux store
             dispatch({
                 type: "ADD_TO_CART",
-                payload: cart
+                payload: unique
             })
 
             //show item in side drawer

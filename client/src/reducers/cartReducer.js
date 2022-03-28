@@ -1,8 +1,10 @@
 let initialState = []
 
 //load product from local storage 
-if (typeof window !== undefined) {
-    initialState = JSON.parse(localStorage.getItem("cart"))
+if (typeof window !== "undefined") {
+    if (localStorage.getItem("cart")) {
+        initialState = JSON.parse(localStorage.getItem("cart"))
+    }
 } else {
     initialState = []
 }

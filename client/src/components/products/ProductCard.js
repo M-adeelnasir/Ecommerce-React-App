@@ -20,9 +20,7 @@ const ProductCard = ({ product }) => {
     //hanlde Product Card
     const handleCart = () => {
         let cart = []
-
-
-        if (typeof window !== undefined) { //if we have window
+        if (typeof window !== "undefined") { //if we have window
 
             if (localStorage.getItem("cart")) {   //if we have already a product in cart
                 cart = JSON.parse(localStorage.getItem("cart")) //parse into json object
@@ -34,14 +32,17 @@ const ProductCard = ({ product }) => {
             let unique = _.uniqWith(cart, _.isEqual) // will remove the dublicates from the arry
 
             localStorage.setItem("cart", JSON.stringify(unique))
+            // console.log(cart);
 
             setToolTip("Added")
 
             //dispatch to redux store
             dispatch({
                 type: "ADD_TO_CART",
-                payload: cart
+                payload: unique
             })
+
+
 
             // show item in side drawer
             dispatch({
