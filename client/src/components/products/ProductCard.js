@@ -43,10 +43,14 @@ const ProductCard = ({ product }) => {
                 payload: cart
             })
 
+            // show item in side drawer
+            dispatch({
+                type: "SET_DRAWER",
+                payload: true
+            })
         }
+
     }
-
-
 
 
 

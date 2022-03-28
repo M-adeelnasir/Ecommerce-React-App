@@ -102,6 +102,12 @@ const SingleProduct = ({ product, loadProduct }) => {
                 type: "ADD_TO_CART",
                 payload: cart
             })
+
+            //show item in side drawer
+            dispatch({
+                type: "SET_DRAWER",
+                payload: true
+            })
         }
 
     }
