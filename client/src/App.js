@@ -31,6 +31,7 @@ import SubHome from './pages/sub/SubHome';
 import Shop from './pages/Shop';
 import Cart from './pages/Cart';
 import CheckOutPage from './CheckOutPage';
+import CouponPage from './pages/admin/coupon/CouponPage';
 
 
 const App = () => {
@@ -100,6 +101,8 @@ const App = () => {
 
         <Route exact path='/cart' component={Cart} />
         <Route exact path='/checkout' component={CheckOutPage} />
+
+        <AdminRoute exact path='/admin/coupon'><CouponPage /></AdminRoute>
 
 
 
