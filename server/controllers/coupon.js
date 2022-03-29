@@ -5,7 +5,11 @@ const Coupon = require('../models/couponSchema');
 //create coupon (admin only)
 exports.create = async (req, res) => {
 
-    const { name, expiry, discount } = req.body
+    // console.log(req.body);
+    // return
+
+    //as we send the data as coupon
+    const { name, expiry, discount } = req.body.coupon
 
     try {
 
@@ -18,10 +22,18 @@ exports.create = async (req, res) => {
 
     } catch (err) {
         console.log(err);
-        res.status(400).json({
-            success: false,
-            data: {}
-        })
+        if (err.code == 11000) {
+            const message = `Dublicate Field Enter at index ${err.index}`
+            res.status(400).json({
+                success: false,
+                data: message
+            })
+        } else {
+            res.status(401).json({
+                success: false,
+                data: {}
+            })
+        }
     }
 }
 
