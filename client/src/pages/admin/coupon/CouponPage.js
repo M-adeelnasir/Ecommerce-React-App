@@ -120,7 +120,7 @@ const CouponPage = () => {
                             <thead className='thead-light'>
                                 <tr>
                                     <th className='text-center' scope='col'>Name</th>
-                                    <th className='text-center' scope='col'>Discount</th>
+                                    <th className='text-center' scope='col'>Discount %</th>
                                     <th className='text-center' scope='col'>Expiry Date</th>
                                     <th className='text-center' scope='col'>Dalete Coupon</th>
                                 </tr>
@@ -129,7 +129,7 @@ const CouponPage = () => {
                             <tbody>
                                 {coupons.map((c) => <tr key={c._id}>
                                     <td className='text-center' >{c.name}</td>
-                                    <td className='text-center' >{c.discount}</td>
+                                    <td className='text-center' >{c.discount}%</td>
                                     <td className='text-center' >{new Date(c.expiry).toLocaleDateString()}</td>
                                     <td className='text-center'><DeleteOutlined className='text-danger cursor' onClick={() => hanldeDeleteCoupon(c._id)} /></td>
                                 </tr>)}

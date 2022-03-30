@@ -1,6 +1,7 @@
 const User = require('../models/userSchema')
 const Product = require('../models/productSchema')
 const Cart = require('../models/cartSchema')
+const Coupon = require('../models/couponSchema')
 
 
 exports.userCart = async (req, res) => {
@@ -117,4 +118,39 @@ exports.sendAddress = async (req, res) => {
         success: true,
         data: userAddress
     })
+}
+
+
+//apply coupon
+exports.applyCoupon = async (req, res) => {
+    const { coupon } = req.body
+    //get the coupon
+    const validCoupon = await Coupon.findOne({ name: coupon }).exec()
+    //if the coupon is invalid
+    if (validCoupon === null) {
+        return res.json({
+            success: false,
+            data: "Invalid Coupon Code"
+        })
+    }
+
+    //get ther so we can get the cart base on user saved 
+    const user = await User.findOne({ email: req.user.email }).exec();
+
+    let { products, cartTotal } = await Cart.findOne({ orderBy: user_id })
+        .populate('products.product', '_id title price')
+        .exec()
+
+    // console.log("cartTotal", cartTotal,"cartTotalAfterDiscount",validCoupon.discount);
+    //let save the cartTotalAfterDiscount in cart schema
+    let cartTotalAfterDiscount = (cartTotal - (cartTotal * validCoupon.discount) / 100)
+        .toFixed(2)  //9.99 (two values)
+
+    await Cart.findOneAndUpdate({ orderBy: user._id }, { cartTotalAfterDiscount }, { new: true, runValidators: true }).exec()
+
+    res.json({
+        success: true,
+        data: cartTotalAfterDiscount
+    })
+
 }

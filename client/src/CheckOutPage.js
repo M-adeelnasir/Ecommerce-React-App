@@ -16,6 +16,8 @@ const CheckOutPage = () => {
     //just to confirm
     const [addressSaved, setAddressSaved] = useState(false)
 
+    const [coupon, setCoupon] = useState('')
+
     const { user } = useSelector((state) => ({ ...state }))
     const dispatch = useDispatch()
 
@@ -75,18 +77,33 @@ const CheckOutPage = () => {
     }
 
 
+    //apply coupon 
+    const handleApplyCoupon = () => {
+        console.log("Coupon send to server==>", coupon);
+    }
+
+
     return (
         <div className="row">
-            <div className="col-md-6">
-                <h4>Delivery Address</h4>
-                <br />
-                <br />
-                <ReactQuill theme='snow' value={address} onChange={setAddress} />
-                <button className='btn btn-primary mt-2' onClick={handleAddress}>Save</button>
-                <hr />
-                <h4>Got Coupon?</h4>
-                <br />
-                coupon input and apply button
+            <div className="col-md-6" >
+                <div className='m-3'>
+                    <h4>Delivery Address</h4>
+                    <br />
+                    <ReactQuill theme='snow' value={address} onChange={setAddress} />
+                    <button className='btn btn-primary mt-2' onClick={handleAddress}>Save</button>
+                    <hr />
+                    <h4>Got Coupon?</h4>
+                    <br />
+
+                    <input type="text"
+                        className='form-control border-top-0 border-left-0 border-right-0 shadow-none rounded-0 col-md-8'
+                        value={coupon}
+                        onChange={(e) => setCoupon(e.target.value)}
+                        placeholder="Apply Coupon"
+                    />
+                    <button className='btn btn-info m-2' onClick={handleApplyCoupon}>Apply</button>
+                </div>
+
 
             </div>
             <div className="col-md-6">
