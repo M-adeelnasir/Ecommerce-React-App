@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { getCart } from './functions/cart'
 import { useSelector, useDispatch } from 'react-redux'
 import { removeCart, userAddress } from './functions/cart'
+import { applyCoupon } from './functions/coupon'
 import { toast } from 'react-toastify'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css';
@@ -17,6 +18,10 @@ const CheckOutPage = () => {
     const [addressSaved, setAddressSaved] = useState(false)
 
     const [coupon, setCoupon] = useState('')
+
+    const [totalAfterDiscount, setTotalAfterDiscount] = useState(0)
+    const [discountError, setDiscountError] = useState('')
+    const [loading, setLoading] = useState(false)
 
     const { user } = useSelector((state) => ({ ...state }))
     const dispatch = useDispatch()
@@ -53,6 +58,8 @@ const CheckOutPage = () => {
                 console.log(res);
                 setProducts([])
                 setTotal(0)
+                setCoupon('')
+                setTotalAfterDiscount(0)
                 toast.success("Cart is Empty, Countinue Shopping")
             }).catch(err => console.log(err))
 
@@ -77,9 +84,38 @@ const CheckOutPage = () => {
     }
 
 
+
+
     //apply coupon 
     const handleApplyCoupon = () => {
-        console.log("Coupon send to server==>", coupon);
+        setLoading(true)
+        // console.log("Coupon send to server==>", coupon);
+        applyCoupon(user.token, coupon)
+            .then((res) => {
+                console.log(res);
+                setDiscountError('')
+                if (res.data.data) {
+                    // console.log(res.data.data);
+                    setTotalAfterDiscount(res.data.data)
+
+                    //push to reducx state
+                }
+                setLoading(false)
+
+            }).catch((err) => {
+                setLoading(false)
+                // console.log(err.response);
+                if (err.response.data.success === false) {
+                    console.log("Invalid");
+                    // console.log(err.response.data.data);
+                    setDiscountError(err.response.data.data)
+                    console.log(discountError);
+
+                    //update the redux state
+                }
+            })
+
+
     }
 
 
@@ -98,10 +134,20 @@ const CheckOutPage = () => {
                     <input type="text"
                         className='form-control border-top-0 border-left-0 border-right-0 shadow-none rounded-0 col-md-8'
                         value={coupon}
-                        onChange={(e) => setCoupon(e.target.value)}
+                        onChange={(e) => {
+                            setCoupon(e.target.value)
+                            setDiscountError('')
+                        }}
                         placeholder="Apply Coupon"
                     />
                     <button className='btn btn-info m-2' onClick={handleApplyCoupon}>Apply</button>
+                    {loading && <span>
+                        <div class="spinner-border text-primary " role="status">
+                            <span class="sr-only text-center">Loading...</span>
+                        </div>
+                    </span>}
+                    <br />
+                    {discountError && <div className='text-danger p-2'>{discountError}</div>}
                 </div>
 
 
@@ -119,6 +165,9 @@ const CheckOutPage = () => {
                 ))}
                 <hr />
                 <p>Cart Total :${total}</p>
+                {totalAfterDiscount > 0 &&
+                    <div className='bg-success p-2 mb-2'>Coupon Applies : Payable Price  ${totalAfterDiscount} </div>
+                }
                 <div className="row">
                     <div className="col-md-6">
                         <button disabled={!addressSaved || !products.length} className='btn btn-primary '>Place Order</button>
