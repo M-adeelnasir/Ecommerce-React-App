@@ -99,6 +99,10 @@ const CheckOutPage = () => {
                     setTotalAfterDiscount(res.data.data)
 
                     //push to reducx state
+                    dispatch({
+                        type: "COUPON_STATE",
+                        payload: true
+                    })
                 }
                 setLoading(false)
 
@@ -106,12 +110,15 @@ const CheckOutPage = () => {
                 setLoading(false)
                 // console.log(err.response);
                 if (err.response.data.success === false) {
-                    console.log("Invalid");
                     // console.log(err.response.data.data);
                     setDiscountError(err.response.data.data)
-                    console.log(discountError);
+                    // console.log(discountError);
 
                     //update the redux state
+                    dispatch({
+                        type: "COUPON_STATE",
+                        payload: false
+                    })
                 }
             })
 
@@ -170,7 +177,9 @@ const CheckOutPage = () => {
                 }
                 <div className="row">
                     <div className="col-md-6">
-                        <button disabled={!addressSaved || !products.length} className='btn btn-primary '>Place Order</button>
+                        <button disabled={!addressSaved || !products.length} className='btn btn-primary '
+
+                        >Place Order</button>
                     </div>
                     <div className="col-md-6">
                         <button disabled={!products.length} onClick={handleRemoveCart} className='btn btn-primary '>Remove Cart</button>
