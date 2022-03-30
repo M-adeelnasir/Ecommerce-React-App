@@ -30,8 +30,9 @@ import CategoryHome from './pages/category/CategoryHome';
 import SubHome from './pages/sub/SubHome';
 import Shop from './pages/Shop';
 import Cart from './pages/Cart';
-import CheckOutPage from './CheckOutPage';
+import CheckOutPage from './pages/CheckOutPage';
 import CouponPage from './pages/admin/coupon/CouponPage';
+import Payment from './pages/Payment';
 
 
 const App = () => {
@@ -103,6 +104,8 @@ const App = () => {
         <Route exact path='/checkout' component={CheckOutPage} />
 
         <AdminRoute exact path='/admin/coupon'><CouponPage /></AdminRoute>
+        <Route exact path='/payment' component={Payment} />
+
 
 
 

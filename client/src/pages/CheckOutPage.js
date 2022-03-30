@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react'
-import { getCart } from './functions/cart'
+import { getCart } from '../functions/cart'
 import { useSelector, useDispatch } from 'react-redux'
-import { removeCart, userAddress } from './functions/cart'
-import { applyCoupon } from './functions/coupon'
+import { removeCart, userAddress } from '../functions/cart'
+import { applyCoupon } from '../functions/coupon'
 import { toast } from 'react-toastify'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css';
 
 
-const CheckOutPage = () => {
+const CheckOutPage = ({ history }) => {
 
     const [products, setProducts] = useState([])
     const [total, setTotal] = useState(0)
@@ -178,7 +178,7 @@ const CheckOutPage = () => {
                 <div className="row">
                     <div className="col-md-6">
                         <button disabled={!addressSaved || !products.length} className='btn btn-primary '
-
+                            onClick={() => history.push('/payment')}
                         >Place Order</button>
                     </div>
                     <div className="col-md-6">
