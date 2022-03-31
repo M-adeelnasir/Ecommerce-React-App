@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react'
 import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
 import { useSelector, useDispatch } from 'react-redux';
 import { createStripIntent } from '../../functions/stripe';
+import { toast } from 'react-toastify';
 
 const StripCheckoutComponent = () => {
     const [succeeded, setSucceeded] = useState(false);
-    const [error, serError] = useState(null)
+    const [error, setError] = useState(null)
     const [disabled, setDisabled] = useState(true)
     const [clientSecret, setClientSecret] = useState('')
-    const [processing, setProcessing] = useState("")
+    const [processing, setProcessing] = useState(false)
 
     const { user } = useSelector((state) => ({ ...state }))
     const dispatch = useDispatch()
@@ -17,11 +18,11 @@ const StripCheckoutComponent = () => {
     const elements = useElements();
 
     useEffect(() => {
-        console.log(user.token);
+        // console.log(user.token);
         createStripIntent(user.token)
             .then((res) => {
-                console.log(res.data);
-                setClientSecret(res.data)
+                console.log(res.data.clientSecret);
+                setClientSecret(res.data.clientSecret)
             }).catch((err) => {
                 console.log(err);
             })
@@ -29,12 +30,49 @@ const StripCheckoutComponent = () => {
 
 
     //submite the payment
-    const handleSubmite = (e) => {
+    const handleSubmite = async (e) => {
         e.preventDefault()
+        setProcessing(true)
+
+        // console.log(clientSecret);
+
+        const payload = await stripe.confirmCardPayment(clientSecret, {
+            payment_method: {
+                card: elements.getElement(CardElement),
+                billing_details: {
+                    name: e.target.name.value
+                }
+
+            }
+        })
+        //check the payment if its success or got any error
+        if (payload.error) {
+            console.log(payload.error);
+            setProcessing(false)
+            setError(`Pyament Faild ${payload.error.message}`)
+        } else {      //if customer success in payment
+            //here get the result successfull result
+            //create ordre and save in database for admin to process
+            // empty the cart from local storage and redux state
+
+            console.log(JSON.stringify(payload, null, 4));
+
+            setProcessing(false)
+            setError(null);
+            setSucceeded(true)
+
+        }
+
+
     }
 
 
     const handleChange = (e) => {
+
+        //listen for changing in elementCard
+        setDisabled(e.empty) //disable pay button if error
+        //and display the error if the customer give invalid card
+        setError(e.error ? e.error.message : "") //show the error message
 
     }
 
@@ -73,6 +111,7 @@ const StripCheckoutComponent = () => {
                         {processing ? <div className='spinner' id='spinner'></div> : "Pay"}
                     </span>
                 </button>
+                {error && <div className='card-error pt-2'> {error}</div>}
             </form>
         </>
     )
