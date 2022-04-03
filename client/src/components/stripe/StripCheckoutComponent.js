@@ -36,6 +36,8 @@ const StripCheckoutComponent = () => {
 
         // console.log(clientSecret);
 
+
+
         const payload = await stripe.confirmCardPayment(clientSecret, {
             payment_method: {
                 card: elements.getElement(CardElement),
@@ -45,7 +47,7 @@ const StripCheckoutComponent = () => {
 
             }
         })
-        //check the payment if its success or got any error
+        //check the payment if its success or got any error 
         if (payload.error) {
             console.log(payload.error);
             setProcessing(false)

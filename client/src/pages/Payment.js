@@ -5,9 +5,10 @@ import '../stripe.css'
 import StripCheckoutComponent from '../components/stripe/StripCheckoutComponent';
 
 //load strip outside components render to avoid recreating strip object on every render
-const stripePromise = loadStripe(`${process.env.STRIP_PUBLISHABLE_KEY}`);
+const stripePromise = loadStripe(`${process.env.REACT_APP_STRIP_PUBLISHABLE_KEY}`);
 
 const Payment = () => {
+    console.log(stripePromise);
     return (
         <div className='container p-5 text-center'>
             <h4>Complete Your Purchase</h4>

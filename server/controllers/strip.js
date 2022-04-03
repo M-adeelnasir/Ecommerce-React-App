@@ -13,15 +13,21 @@ exports.createStripIntent = async (req, res) => {
         //later apply price
 
         const paymentIntent = await stripe.paymentIntents.create({
+            description: 'Software development services',
             amount: 100,
             currency: 'usd',
+            payment_method_types: ['card'],
         });
 
-        res.json({
-            clientSecret: paymentIntent.client_secret
+
+        res.send({
+            clientSecret: paymentIntent.client_secret,
+            paymentIntent
         })
+
     } catch (err) {
         console.log(err);
+
     }
 }
 
