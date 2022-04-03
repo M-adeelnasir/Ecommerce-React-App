@@ -3,7 +3,10 @@ import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
 import { useSelector, useDispatch } from 'react-redux';
 import { createStripIntent } from '../../functions/stripe';
 import { Link } from 'react-router-dom'
-import { toast } from 'react-toastify';
+import { Card } from 'antd';
+import { DollarOutlined, CheckOutlined } from '@ant-design/icons';
+import payimage from '../../images/payimage.jpg'
+
 
 const StripCheckoutComponent = () => {
     const [succeeded, setSucceeded] = useState(false);
@@ -11,6 +14,10 @@ const StripCheckoutComponent = () => {
     const [disabled, setDisabled] = useState(true)
     const [clientSecret, setClientSecret] = useState('')
     const [processing, setProcessing] = useState(false)
+
+    const [cartTotal, setCartTotal] = useState(0);
+    const [payable, setPayable] = useState(0);
+    const [totalAfterDiscount, setTotalAfterDiscount] = useState(0)
 
     const { user, couponSate } = useSelector((state) => ({ ...state }))
     const dispatch = useDispatch()
@@ -25,6 +32,11 @@ const StripCheckoutComponent = () => {
                 console.log("payment intent==>", res);
                 console.log(res.data);
                 setClientSecret(res.data.clientSecret)
+
+                setCartTotal(res.data.cartTotal);
+                setPayable(res.data.payable);
+                setTotalAfterDiscount(res.data.cartTotalAfterDiscount)
+                console.log(res.data.cartTotal);
             }).catch((err) => {
                 console.log(err);
             })
@@ -103,7 +115,47 @@ const StripCheckoutComponent = () => {
     return (
         <>
             <p className={succeeded ? "result-message" : "result-message hidden"}>Payment Successful.<Link to='/user/history'>See in your purchase history</Link></p>
+
+            {!succeeded &&
+                <div>
+                    {couponSate && totalAfterDiscount !== undefined ?
+                        (<div className='alert alert-success'>{`Total Price After Discount: ${totalAfterDiscount}`} </div>)
+                        :
+                        (<div className='alert alert-danger'> No Coupon Applied...</div>)}
+                </div>
+            }
+
             <form id='payment-form' className='stripe-form' onSubmit={handleSubmite}>
+                <div className="text-center pb-5">
+                    <Card
+                        cover={
+                            <img
+                                src='https://images.unsplash.com/photo-1620714223084-8fcacc6dfd8d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cGF5bWVudHxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60'
+                                alt="laptop"
+                                style={{
+                                    height: '200px',
+                                    objectFit: 'cover',
+                                    marginBottom: '-50px',
+                                }}
+                            />
+                        }
+                        actions={[
+                            <>
+                                <DollarOutlined className='text-info' />
+                                <br /> Total: $
+                                {cartTotal}
+                            </>,
+                            <>
+                                <CheckOutlined className='text-info' />
+                                <br /> Total after Discount: $
+                                {(payable / 100).toFixed(2)}
+                            </>
+
+                        ]}
+                    >
+
+                    </Card>
+                </div>
                 <CardElement
                     id='card-element'
                     options={cartStyle}
@@ -118,6 +170,7 @@ const StripCheckoutComponent = () => {
                 </button>
                 {error && <div className='card-error pt-2'> {error}</div>}
             </form>
+
         </>
     )
 }
