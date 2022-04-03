@@ -12,9 +12,18 @@ exports.createStripIntent = async (req, res) => {
         //later Apply Coupon
         //later apply price
 
+        //get user 
+        const user = await User.findOne({ email: req.user.email }).exec()
+        console.log(user);
+
+        //get the total ammount
+        const { cartTotal } = await Cart.findOne({ OrderBy: user._id }).exec()
+
+
+        //create a payment intent base on ordered amount cartTotal and currency
         const paymentIntent = await stripe.paymentIntents.create({
             description: 'Software development services',
-            amount: 100,
+            amount: cartTotal * 100,         //as 100 =1$
             currency: 'usd',
             payment_method_types: ['card'],
         });

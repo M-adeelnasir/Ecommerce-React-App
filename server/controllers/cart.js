@@ -11,7 +11,7 @@ exports.userCart = async (req, res) => {
     let products = [];
     //get the user to store the orderBy which user
     const user = await User.findOne({ email: req.user.email }).exec();
-
+    console.log(user._id);
     //check if the cart with the logged in user id already exists
     const cartExistsByThisUser = await Cart.findOne({ orderBy: user._id }).exec();
 
@@ -51,16 +51,21 @@ exports.userCart = async (req, res) => {
     // console.log("cart Total ==>",cartTotal);
 
 
-    const newCart = await new Cart({
+    // const newCart = await new Cart({
+    //     products,
+    //     cartTotal,
+    //     orderBy: user._id,
+
+    // }).save()
+
+    const newCart = await Cart.create({
         products,
         cartTotal,
         orderBy: user._id,
-
-    }).save()
+    })
 
     console.log("Cart ====>", newCart);
-
-    // Print("Abdullah's error")
+    console.log("user=>", user._id);
 
     res.json({
         success: true,

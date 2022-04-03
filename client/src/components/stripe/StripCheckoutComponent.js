@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
 import { useSelector, useDispatch } from 'react-redux';
 import { createStripIntent } from '../../functions/stripe';
+import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify';
 
 const StripCheckoutComponent = () => {
@@ -100,6 +101,7 @@ const StripCheckoutComponent = () => {
 
     return (
         <>
+            <p className={succeeded ? "result-message" : "result-message hidden"}>Payment Successful.<Link to='/user/history'>See in your purchase history</Link></p>
             <form id='payment-form' className='stripe-form' onSubmit={handleSubmite}>
                 <CardElement
                     id='card-element'
