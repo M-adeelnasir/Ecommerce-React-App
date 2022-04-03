@@ -12,7 +12,7 @@ const StripCheckoutComponent = () => {
     const [clientSecret, setClientSecret] = useState('')
     const [processing, setProcessing] = useState(false)
 
-    const { user } = useSelector((state) => ({ ...state }))
+    const { user, couponSate } = useSelector((state) => ({ ...state }))
     const dispatch = useDispatch()
 
     const stripe = useStripe();
@@ -20,9 +20,10 @@ const StripCheckoutComponent = () => {
 
     useEffect(() => {
         // console.log(user.token);
-        createStripIntent(user.token)
+        createStripIntent(user.token, couponSate)
             .then((res) => {
-                console.log(res.data.clientSecret);
+                console.log("payment intent==>", res);
+                console.log(res.data);
                 setClientSecret(res.data.clientSecret)
             }).catch((err) => {
                 console.log(err);

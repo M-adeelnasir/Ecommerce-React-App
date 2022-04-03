@@ -7,23 +7,35 @@ const Coupon = require('../models/couponSchema')
 const stripe = require('stripe')(process.env.STRIP_SECRET_KEY);
 
 exports.createStripIntent = async (req, res) => {
+    // console.log(req.body);
+    // return
+
 
     try {
-        //later Apply Coupon
-        //later apply price
+        //applu coupon
+        const { couponApplied } = req.body
 
         //get user 
         const user = await User.findOne({ email: req.user.email }).exec()
-        console.log(user);
 
         //get the total ammount
-        const { cartTotal } = await Cart.findOne({ OrderBy: user._id }).exec()
+        const { cartTotal, cartTotalAfterDiscount } = await Cart.findOne({ OrderBy: user._id }).exec()
 
+        // console.log("cart total==>", cartTotal, "AFter discount ==>", cartTotalAfterDiscount);
+        // check if we have coupon then charge the price after discount other wise the total ammount
+
+        let finalAmount = 0
+        if (couponApplied && cartTotalAfterDiscount) {
+            finalAmount = cartTotalAfterDiscount * 100
+        }
+        else {
+            finalAmount = cartTotal * 100
+        }
 
         //create a payment intent base on ordered amount cartTotal and currency
         const paymentIntent = await stripe.paymentIntents.create({
             description: 'Software development services',
-            amount: cartTotal * 100,         //as 100 =1$
+            amount: finalAmount,         //as 100 =1$
             currency: 'usd',
             payment_method_types: ['card'],
         });
@@ -31,7 +43,10 @@ exports.createStripIntent = async (req, res) => {
 
         res.send({
             clientSecret: paymentIntent.client_secret,
-            paymentIntent
+            paymentIntent,
+            cartTotal,
+            cartTotalAfterDiscount,
+            payable: finalAmount
         })
 
     } catch (err) {
