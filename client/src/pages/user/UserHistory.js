@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons'
 import { toast } from 'react-toastify'
 import { Link } from 'react-router-dom'
+import ShowPaymentInfo from '../../components/products/ShowPaymentInfo'
 
 
 const UserHistory = () => {
@@ -55,7 +56,7 @@ const UserHistory = () => {
     const showEachOrder = () => orders.map((order, i) => {
         return (
             <div key={i} className='m-5 p-3 card'>
-                <p> Payment Info</p>
+                <p> <ShowPaymentInfo order={order} /></p>
                 {showOrderInTable(order)}
                 <div className="row">
                     <div className="col">
