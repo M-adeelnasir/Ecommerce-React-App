@@ -48,3 +48,28 @@ exports.createOrder = async (req, res) => {
         })
     }
 }
+
+
+
+//get all orders to show all in user history page
+exports.getOrders = async (req, res) => {
+    try {
+        const user = await User.findOne({ email: req.user.email }).exec();
+        //get all order base on orderBy 
+        let orders = await Order.find({ orderBy: user._id })
+            .populate('products.product')
+            .exec()
+
+        res.json({
+            success: true,
+            data: orders
+        })
+    } catch (err) {
+        console.log(err);
+        res.status(404).json({
+            success: false,
+            data: {}
+        })
+    }
+
+}
