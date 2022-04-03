@@ -5,7 +5,6 @@ import { createStripIntent } from '../../functions/stripe';
 import { Link } from 'react-router-dom'
 import { Card } from 'antd';
 import { DollarOutlined, CheckOutlined } from '@ant-design/icons';
-import payimage from '../../images/payimage.jpg'
 
 
 const StripCheckoutComponent = () => {
@@ -63,7 +62,7 @@ const StripCheckoutComponent = () => {
         })
         //check the payment if its success or got any error 
         if (payload.error) {
-            console.log(payload.error);
+            // console.log(payload.error);
             setProcessing(false)
             setError(`Pyament Faild ${payload.error.message}`)
         } else {      //if customer success in payment
