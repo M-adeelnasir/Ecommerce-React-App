@@ -150,10 +150,10 @@ const SingleProduct = ({ product, loadProduct }) => {
 
                 <Card
                     actions={[
-                        <Tooltip title={toolTip}>
-                            <a onClick={handleCart}>
-                                <ShoppingCartOutlined className='text-success' /> <br /> Add to Cart
-                            </a>
+                        <Tooltip title={product.quantity < 1 ? "Out Of Stock" : toolTip}>
+                            <button className='cardBtn' disabled={product.quantity < 1} onClick={handleCart}>
+                                <ShoppingCartOutlined className='text-success' /> <br />{product.quantity < 1 ? "Out Of Stock" : " Add To Cart"}
+                            </button>
                         </Tooltip>
                         ,
                         <Link to='/'>
