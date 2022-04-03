@@ -38,10 +38,7 @@ const productSchema = new mongoose.Schema({
         ref: "Sub"
     }],
     quantity: Number,
-    sold: {
-        type: Number,
-        default: 0
-    },
+    sold: Number,
     images: {
         type: Array
     },

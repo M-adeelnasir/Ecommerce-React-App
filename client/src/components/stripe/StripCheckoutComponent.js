@@ -5,6 +5,8 @@ import { createStripIntent } from '../../functions/stripe';
 import { Link } from 'react-router-dom'
 import { Card } from 'antd';
 import { DollarOutlined, CheckOutlined } from '@ant-design/icons';
+import { createOrder } from '../../functions/order';
+import { removeCart } from '../../functions/cart';
 
 
 const StripCheckoutComponent = () => {
@@ -72,6 +74,45 @@ const StripCheckoutComponent = () => {
 
             console.log(JSON.stringify(payload, null, 4));
 
+            //create new order save in database
+            createOrder(user.token, payload)
+                .then((res) => {
+                    if (res.data.success) {
+                        //empty the cart from local storage
+                        if (typeof window !== "undefined") {
+                            localStorage.removeItem('cart')
+                        }
+
+                        //empty the cart from redux
+                        dispatch({
+                            type: 'ADD_TO_CART',
+                            payload: []
+                        })
+
+                        //reset coupon to false
+                        dispatch({
+                            type: 'COUPON_STATE',
+                            payload: false
+                        })
+
+                        //empty the cart from database
+                        removeCart(user.token)
+                            .then((res) => {
+                                console.log(res);
+                                console.log("Cart Removed");
+                            }).catch((err) => {
+                                console.log(err);
+                            })
+
+
+
+
+
+                    }
+                }).catch((err) => {
+                    console.log(err);
+                    console.log(err.response);
+                })
             setProcessing(false)
             setError(null);
             setSucceeded(true)
