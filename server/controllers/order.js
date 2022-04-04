@@ -73,3 +73,49 @@ exports.getOrders = async (req, res) => {
     }
 
 }
+
+
+
+
+//manage orders by admin
+
+//get All orders
+exports.getAllOrders = async (req, res) => {
+    try {
+        const orders = await Order.find({})
+            .sort('-createdAt')
+            .populate('products.product')
+            .exec()
+        res.json({
+            success: true,
+            data: orders
+        })
+    } catch (err) {
+        console.log(err);
+        res.status(404).json({
+            success: false,
+            data: {}
+        })
+    }
+}
+
+//Manage all orders status
+exports.orderStatus = async (req, res) => {
+    try {
+        const { orderId, orderStatus } = req.body;
+
+        let update = await Order.findByIdAndUpdate(orderId, { orderStatus }, { new: true, runValidators: true })
+        res.json({
+            success: true,
+            data: update
+        })
+
+    } catch (err) {
+        console.log(err);
+        res.status(404).json({
+            success: false,
+            data: {}
+        })
+    }
+
+}
