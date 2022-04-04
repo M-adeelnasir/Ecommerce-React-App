@@ -12,6 +12,8 @@ import { HeartOutlined, ShoppingCartOutlined } from '@ant-design/icons'
 import ProductListItem from './ProductListItem';
 import { Carousel } from 'react-responsive-carousel';
 import { Card, Tabs, Tooltip } from 'antd'
+import { addToWishlist } from '../../functions/auth'
+
 
 const { TabPane } = Tabs;
 
@@ -29,6 +31,7 @@ const SingleProduct = ({ product, loadProduct }) => {
 
     const history = useHistory();
     const { slug } = useParams()
+
 
     const dispatch = useDispatch()
 
@@ -112,6 +115,18 @@ const SingleProduct = ({ product, loadProduct }) => {
 
     }
 
+    //wishlist
+    const handleAddToWishlist = (e) => {
+        e.preventDefault()
+        addToWishlist(user.token, product._id)
+            .then((res) => {
+                console.log(res.data);
+                history.push('/user/wishlist')
+                toast.success("Added to wishlist")
+            }).catch((err) => console.log(err))
+    }
+
+
     return (
         <>
             {/* {JSON.stringify(product)} */}
@@ -156,11 +171,11 @@ const SingleProduct = ({ product, loadProduct }) => {
                             </button>
                         </Tooltip>
                         ,
-                        <Link to='/'>
+                        <a onClick={handleAddToWishlist}>
                             <HeartOutlined className='text-info' />
                             <br />
                             Add to Whishlist
-                        </Link>,
+                        </a>,
                         <>
 
                             <div onClick={handelModal}>

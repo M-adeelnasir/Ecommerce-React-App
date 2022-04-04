@@ -22,7 +22,7 @@ const ProductListItem = ({ product }) => {
                 <li className="list-group-item d-flex justify-content-between align-items-center">
                     Subs{" "}
                     {subs && subs.map((s) => (
-                        <Link to={`/sub/${subs.slug}`} className="label label-defualt label-pill pull-xs-right">
+                        <Link to={`/sub/${s.slug}`} className="label label-defualt label-pill pull-xs-right">
                             {s.name}
                         </Link>
                     ))}
