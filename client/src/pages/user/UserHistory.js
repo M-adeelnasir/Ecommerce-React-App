@@ -6,6 +6,8 @@ import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons'
 import { toast } from 'react-toastify'
 import { Link } from 'react-router-dom'
 import ShowPaymentInfo from '../../components/products/ShowPaymentInfo'
+import { Document, Page, Text, View, StyleSheet, PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
+
 
 
 const UserHistory = () => {
@@ -43,15 +45,42 @@ const UserHistory = () => {
             {order.products.map((p, i) => (
                 <tr key={i}>
                     <td><b>{p.product.title}</b></td>
-                    <td><b>{p.product.price}</b></td>
-                    <td><b>{p.product.brand}</b></td>
-                    <td><b>{p.product.color}</b></td>
-                    <td><b>{p.count}</b></td>
-                    <td><b>{p.product.shipping === "Yes" ? <CheckCircleOutlined style={{ color: 'green' }} /> : <CloseCircleOutlined style={{ color: 'red' }} />}</b></td>
+                    <td>{p.product.price}</td>
+                    <td>{p.product.brand}</td>
+                    <td>{p.product.color}</td>
+                    <td>{p.count}</td>
+                    <td>{p.product.shipping === "Yes" ? <CheckCircleOutlined style={{ color: 'green' }} /> : <CloseCircleOutlined style={{ color: 'red' }} />}</td>
                 </tr>
             ))}
         </tbody>
     </table>
+
+
+
+
+
+    // Create PDF Component
+    const MyDocument = (order) => (
+        <PDFDownloadLink
+            document={
+                <Document>
+                    <Page size="A4" >
+                        <View >
+                            <Text>Section #1</Text>
+                        </View>
+                        <View >
+                            <Text>Section #2</Text>
+                        </View>
+                    </Page>
+                </Document>
+
+            }
+            className="btn btn-sm btn-info"
+            fileName='invoice.pdf'
+        >
+            PDF Download
+        </PDFDownloadLink>
+    );
 
     const showEachOrder = () => orders.map((order, i) => {
         return (
@@ -60,12 +89,14 @@ const UserHistory = () => {
                 {showOrderInTable(order)}
                 <div className="row">
                     <div className="col">
-                        <p>Download PDF</p>
+                        {MyDocument(order)}
                     </div>
                 </div>
             </div>
         )
     })
+
+
 
     return (
         <>
@@ -84,6 +115,7 @@ const UserHistory = () => {
 
                 </div>
             </div>
+
         </>
     )
 }
