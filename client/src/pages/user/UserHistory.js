@@ -6,7 +6,8 @@ import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons'
 import { toast } from 'react-toastify'
 import { Link } from 'react-router-dom'
 import ShowPaymentInfo from '../../components/products/ShowPaymentInfo'
-import { Document, Page, Text, View, StyleSheet, PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
+import { PDFDownloadLink } from '@react-pdf/renderer';
+import Invoice from '../../components/invoice/Invoice'
 
 
 
@@ -63,16 +64,7 @@ const UserHistory = () => {
     const MyDocument = (order) => (
         <PDFDownloadLink
             document={
-                <Document>
-                    <Page size="A4" >
-                        <View >
-                            <Text>Section #1</Text>
-                        </View>
-                        <View >
-                            <Text>Section #2</Text>
-                        </View>
-                    </Page>
-                </Document>
+                <Invoice order={order} />
 
             }
             className="btn btn-sm btn-info"
