@@ -26,3 +26,40 @@ export const currentAdmin = async (authToken) => {
         }
     })
 }
+
+
+
+//add to wishlist
+export const addToWishlist = async (authToken, productId) => {
+    return await axios.post(`${process.env.REACT_APP_API_REQUEST}/user/wishlist`,
+        { productId },
+        {
+            headers: {
+                authToken
+            }
+        }
+    )
+}
+
+//get wishlist
+export const getWishlist = async (authToken) => {
+    return await axios.get(`${process.env.REACT_APP_API_REQUEST}/user/wishlist`,
+        {
+            headers: {
+                authToken
+            }
+        }
+    )
+}
+
+//remove from wishlist
+export const removeFromWishlist = async (authToken, productId) => {
+    return await axios.put(`${process.env.REACT_APP_API_REQUEST}/user/wishlist/${productId}`,
+        {},
+        {
+            headers: {
+                authToken
+            }
+        }
+    )
+}
