@@ -46,7 +46,7 @@ const UserHistory = () => {
             {order.products.map((p, i) => (
                 <tr key={i}>
                     <td><b>{p.product.title}</b></td>
-                    <td>{p.product.price}</td>
+                    <td>${p.product.price}</td>
                     <td>{p.product.brand}</td>
                     <td>{p.product.color}</td>
                     <td>{p.count}</td>

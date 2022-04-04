@@ -21,3 +21,27 @@ export const getOrders = async (authToken) => {
         }
     )
 }
+
+
+//get all orders on admin dashboard
+export const getAllOrders = async (authToken) => {
+    return await axios.get(`${process.env.REACT_APP_API_REQUEST}/admin/orders`,
+        {
+            headers: {
+                authToken
+            }
+        }
+    )
+}
+
+//update the order status
+export const UpdateOrderStatus = async (authToken, orderId, orderStatus) => {
+    return await axios.put(`${process.env.REACT_APP_API_REQUEST}/admin/order-status`,
+        { orderId, orderStatus },
+        {
+            headers: {
+                authToken
+            }
+        }
+    )
+}
