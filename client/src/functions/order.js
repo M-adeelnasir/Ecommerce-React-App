@@ -45,3 +45,15 @@ export const UpdateOrderStatus = async (authToken, orderId, orderStatus) => {
         }
     )
 }
+
+//cash on delivery
+export const createCODorder = async (authToken, COD) => {
+    return await axios.post(`${process.env.REACT_APP_API_REQUEST}/order/cash-on-delivery`,
+        { COD },
+        {
+            headers: {
+                authToken
+            }
+        }
+    )
+}

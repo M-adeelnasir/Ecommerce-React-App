@@ -3,6 +3,7 @@ import { getCart } from '../functions/cart'
 import { useSelector, useDispatch } from 'react-redux'
 import { removeCart, userAddress } from '../functions/cart'
 import { applyCoupon } from '../functions/coupon'
+import { createCODorder } from '../functions/order'
 import { toast } from 'react-toastify'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css';
@@ -23,7 +24,7 @@ const CheckOutPage = ({ history }) => {
     const [discountError, setDiscountError] = useState('')
     const [loading, setLoading] = useState(false)
 
-    const { user } = useSelector((state) => ({ ...state }))
+    const { user, CODstate } = useSelector((state) => ({ ...state }))
     const dispatch = useDispatch()
 
 
@@ -121,9 +122,19 @@ const CheckOutPage = ({ history }) => {
                     })
                 }
             })
-
-
     }
+
+
+    //hanlde COD place order
+    const handleCOD = () => {
+        createCODorder(user.token, CODstate)
+            .then((res) => {
+                console.log(res);
+            }).catch((err) => {
+                console.log(err);
+            })
+    }
+
 
 
     return (
@@ -177,9 +188,15 @@ const CheckOutPage = ({ history }) => {
                 }
                 <div className="row">
                     <div className="col-md-6">
-                        <button disabled={!addressSaved || !products.length} className='btn btn-primary '
-                            onClick={() => history.push('/payment')}
-                        >Place Order</button>
+                        {CODstate ? (
+                            <button disabled={!addressSaved || !products.length} className='btn btn-primary '
+                                onClick={handleCOD}
+                            >Place Order</button>
+                        ) : (
+                            <button disabled={!addressSaved || !products.length} className='btn btn-primary '
+                                onClick={() => history.push('/payment')}
+                            >Place Order</button>
+                        )}
                     </div>
                     <div className="col-md-6">
                         <button disabled={!products.length} onClick={handleRemoveCart} className='btn btn-primary '>Remove Cart</button>
