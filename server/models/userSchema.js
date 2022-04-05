@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { ObjectId } = mongoose.Schema
 
 const userSchema = new mongoose.Schema({
     name: String,
@@ -17,7 +18,11 @@ const userSchema = new mongoose.Schema({
     },
     address: String
     ,
-    picture: String
+    picture: String,
+    wishlist: [{
+        type: ObjectId,
+        ref: 'Product'
+    }]
 
 }, { timestamps: true })
 

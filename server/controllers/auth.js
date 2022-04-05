@@ -30,3 +30,60 @@ exports.currentUser = async (req, res) => {
         res.json(user)
     })
 }
+
+
+
+// Wishlist Part
+// post
+exports.addToWishlist = async (req, res) => {
+    try {
+        const { productId } = req.body
+        const user = await User.findOneAndUpdate(
+            { email: req.user.email },
+            { $addToSet: { wishlist: productId } }
+        ).exec()    //addtoset to avoid the repeat of same product in schema
+
+        res.json({
+            success: true
+        })
+    } catch (err) {
+        console.log(err);
+        res.status(404).json({
+            success: false,
+        })
+    }
+}
+
+//get the wishlist products
+exports.getWishlist = async (req, res) => {
+    try {
+        const list = await User.findOne({ email: req.user.email }).select('wishlist').populate('wishlist').exec();
+        console.log(list);
+        res.json({
+            success: true,
+            data: list
+
+        })
+    } catch (err) {
+        console.log(err);
+        res.status(404).json({
+            success: false,
+        })
+    }
+
+}
+exports.removeFromWislist = async (req, res) => {
+    try {
+        const { productId } = req.params
+        const user = await User.findOneAndUpdate({ email: req.user.email }, { $pull: { wishlist: productId } }).exec()
+
+        res.json({
+            success: true
+        })
+    } catch (err) {
+        console.log(err);
+        res.status(404).json({
+            success: false
+        })
+    }
+}

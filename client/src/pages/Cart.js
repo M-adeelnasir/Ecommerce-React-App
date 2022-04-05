@@ -17,7 +17,21 @@ const Cart = ({ history }) => {
     }
 
     const saveOrderToDb = () => {
-        alert("saved into db")
+        userCart(cart, user.token)
+            .then((res) => {
+                //push to checkout if the user have products in cart
+                if (res.data.success) {
+                    history.push('/checkout')
+                }
+            }).catch((err) => console.log(err))
+    }
+
+    //cashon delievry
+    const saveOrderToDbCOD = () => {
+        dispatch({
+            type: "COD_STATE",
+            payload: true
+        })
         userCart(cart, user.token)
             .then((res) => {
                 //push to checkout if the user have products in cart
@@ -79,13 +93,24 @@ const Cart = ({ history }) => {
                         <hr />
                         Total  : <b>${showTotal()}</b>
                         <hr />
-                        {user ? <button
-                            onClick={saveOrderToDb}
-                            // disabled={!cart.length}
-                            className='btn btn-sm btn-primary mt-2'
-                        >
-                            Proceed To Checkout
-                        </button>
+                        {user ?
+                            <>
+                                <button
+                                    onClick={saveOrderToDb}
+                                    // disabled={!cart.length}
+                                    className='btn btn-sm btn-primary mt-2'
+                                >
+                                    Proceed To Checkout
+                                </button>
+                                <br />
+                                <button
+                                    onClick={saveOrderToDbCOD}
+                                    // disabled={!cart.length}
+                                    className='btn btn-sm btn-outline-info mt-2'
+                                >
+                                    Cash on Delivery
+                                </button>
+                            </>
                             :
 
                             <Link className='btn btn-sm btn-primary mt-2' to={{
