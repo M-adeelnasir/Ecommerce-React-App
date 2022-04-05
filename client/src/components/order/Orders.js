@@ -44,6 +44,7 @@ const Orders = ({ handleStatusChange, orders }) => {
                                 <div className="col-md-8">
                                     <select onChange={e => handleStatusChange(order._id, e.target.value)} className="form-control form-control-sm" defaultValue={order.orderStatus} name="status">
                                         <option value="Not Processed Yet">Not Processed Yet</option>
+                                        <option value="cash on delivery">cash on delivery</option>
                                         <option value="Processing">Processing</option>
                                         <option value="Dispatched">Dispatched</option>
                                         <option value="Cancelled">Cancelled</option>

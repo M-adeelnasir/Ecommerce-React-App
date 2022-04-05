@@ -5,6 +5,7 @@ import { removeCart, userAddress } from '../functions/cart'
 import { applyCoupon } from '../functions/coupon'
 import { createCODorder } from '../functions/order'
 import { toast } from 'react-toastify'
+
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css';
 
@@ -24,7 +25,7 @@ const CheckOutPage = ({ history }) => {
     const [discountError, setDiscountError] = useState('')
     const [loading, setLoading] = useState(false)
 
-    const { user, CODstate } = useSelector((state) => ({ ...state }))
+    const { user, CODstate, couponSate, cart } = useSelector((state) => ({ ...state }))
     const dispatch = useDispatch()
 
 
@@ -115,11 +116,7 @@ const CheckOutPage = ({ history }) => {
                     setDiscountError(err.response.data.data)
                     // console.log(discountError);
 
-                    //update the redux state
-                    dispatch({
-                        type: "COUPON_STATE",
-                        payload: false
-                    })
+
                 }
             })
     }
@@ -127,9 +124,39 @@ const CheckOutPage = ({ history }) => {
 
     //hanlde COD place order
     const handleCOD = () => {
-        createCODorder(user.token, CODstate)
+        createCODorder(user.token, CODstate, couponSate)
             .then((res) => {
-                console.log(res);
+                // console.log(res);
+                if (res.data.success) {
+                    //remove cart from local strorage
+                    if (typeof window !== "undefined") {
+                        localStorage.removeItem('cart')
+                    }
+
+                    //cart remove from redux
+                    dispatch({
+                        type: 'ADD_TO_CART',
+                        payload: []
+                    })
+
+                    //COD in the redux state
+                    dispatch({
+                        type: "COD_STATE",
+                        payload: false
+                    })
+                    //coupon in redux
+                    dispatch({
+                        type: 'COUPON_STATE',
+                        payload: false
+                    })
+                    //cart remove from database
+                    removeCart(user.token)
+
+                    setTimeout(() => {
+                        history.push('/user/history')
+                    }, 2000);
+
+                }
             }).catch((err) => {
                 console.log(err);
             })

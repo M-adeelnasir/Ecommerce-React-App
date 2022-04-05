@@ -74,7 +74,7 @@ const UserHistory = () => {
         </PDFDownloadLink>
     );
 
-    const showEachOrder = () => orders.map((order, i) => {
+    const showEachOrder = () => orders.reverse().map((order, i) => {
         return (
             <div key={i} className='m-5 p-3 card'>
                 <p> <ShowPaymentInfo order={order} /></p>

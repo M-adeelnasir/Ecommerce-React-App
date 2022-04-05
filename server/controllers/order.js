@@ -125,7 +125,7 @@ exports.orderStatus = async (req, res) => {
 
 exports.creatCashOrder = async (req, res) => {
     try {
-        const { COD } = req.body
+        const { COD, couponApplied } = req.body
 
         //if COD is true create order statuts
         if (!COD) {
@@ -139,19 +139,26 @@ exports.creatCashOrder = async (req, res) => {
 
         const userCart = await Cart.findOne({ orderBy: user._id }).exec()
 
+        //check if coupon is applied
+        let finalAmount = 0
+        if (couponApplied && userCart.cartTotalAfterDiscount) {
+            finalAmount = userCart.cartTotalAfterDiscount * 100
+        } else {
+            finalAmount = userCart.cartTotal * 100
+        }
+
         const newOrder = await Order.create({
             products: userCart.products,
             paymentIntent: {
                 id: uniqueid(),
-                amount: userCart.cartTotal,
-                currenncy: "USD",
+                amount: finalAmount,
+                currency: "USD",
                 status: "Cash On delivery",
                 created: Date.now(),
                 payment_method_types: ["Cash On delivery"],
-
-
             },
-            orderBy: user._id
+            orderBy: user._id,
+            orderStatus: "cash on delivery"
         })
 
         //decreament and increament quantity and sold
