@@ -69,7 +69,7 @@ const ProductCard = ({ product }) => {
             )}
             <Card
                 hoverable
-                cover={<img alt='product' src={images && images.length ? images[1].url : ""}
+                cover={<img alt='product' src={images && images.length ? images[0].url : ""}
                     style={{ height: "150px", objectFit: "cover", with: "100%" }}
                     className="p-1" />}
                 actions={[
